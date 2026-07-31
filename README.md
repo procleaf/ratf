@@ -200,4 +200,4 @@ Switch language via:
 
 ## License
 
-MIT
+GPL v3
