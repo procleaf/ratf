@@ -1,0 +1,22 @@
+<h1>Posts</h1>
+
+<%= link_to "New Post", new_post_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Updated</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |record| %>
+      <tr>
+        <td><%= link_to record.title, post_path(record) %></td>
+        <td><%= record.user&.username %></td>
+        <td><%= record.updated_at.strftime("%Y-%m-%d %H:%M") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

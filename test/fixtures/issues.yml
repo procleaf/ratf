@@ -1,0 +1,36 @@
+open_bug:
+  title: Dashboard widget not rendering
+  description: The revenue widget on the dashboard shows a blank panel.
+  status: 0
+  severity: 3
+  urgency: 2
+  issue_type: 0
+  reported_by: admin
+  assigned_to: user_one
+  test_case: dashboard_test
+  test_result: dashboard_failed
+
+in_progress_issue:
+  title: API timeout under load
+  description: The API endpoint times out when more than 100 concurrent requests are sent.
+  status: 1
+  severity: 4
+  urgency: 3
+  issue_type: 0
+  reported_by: manager
+  assigned_to: user_two
+  test_case: api_test
+  test_result: api_error
+
+resolved_issue:
+  title: Login button misaligned
+  description: The login button on mobile is 2px off to the left.
+  status: 2
+  severity: 1
+  urgency: 0
+  issue_type: 0
+  reported_by: user_one
+  assigned_to: admin
+  created_at: <%= 2.days.ago.iso8601 %>
+  closed_at: <%= 1.day.ago.iso8601 %>
+

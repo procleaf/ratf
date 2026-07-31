@@ -1,0 +1,41 @@
+<h1><%= @record.name %></h1>
+
+<dl>
+  <dt>ID</dt>
+  <dd><%= @record.id %></dd>
+
+  <dt>Name</dt>
+  <dd><%= @record.name %></dd>
+
+  <dt>Version</dt>
+  <dd><%= @record.version %></dd>
+
+  <dt>Status</dt>
+  <dd><%= @record.status %></dd>
+
+  <dt>Project</dt>
+  <dd><%= @record.project&.name || "None" %></dd>
+
+  <dt>Description</dt>
+  <dd><%= @record.metadata["description"] %></dd>
+
+  <dt>Author</dt>
+  <dd><%= @record.metadata["author"] %></dd>
+
+  <dt>Tags</dt>
+  <dd><%= @record.metadata["tags"] %></dd>
+
+  <dt>Dependencies</dt>
+  <dd><%= @record.metadata["dependencies"] %></dd>
+
+  <dt>Created At</dt>
+  <dd><%= @record.created_at %></dd>
+
+  <dt>Updated At</dt>
+  <dd><%= @record.updated_at %></dd>
+</dl>
+
+<p>
+  <%= link_to "Edit", edit_test_suite_path(@record) %> |
+  <%= link_to "Back to Test Suites", test_suites_path %>
+</p>

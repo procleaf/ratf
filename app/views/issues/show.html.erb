@@ -1,0 +1,114 @@
+<h1><%= @record.title %></h1>
+
+<div class="issue-meta two-col">
+  <div>
+    <dl>
+      <dt>Status</dt>
+      <dd>
+        <span class="badge badge-<%= @record.status %>"><%= @record.status.to_s.humanize %></span>
+        <% if @record.can_close? %>
+          <%= button_to @record.open? ? "Start" : "Reopen", reassign_issue_path(@record), method: :patch, params: { status: @record.open? ? "in_progress" : "open" }, class: "btn btn-sm" %>
+        <% end %>
+      </dd>
+      <dt>Reported by</dt>
+      <dd><%= @record.reported_by&.username || "—" %></dd>
+      <dt>Assigned to</dt>
+      <dd><%= @record.assigned_to&.username || "unassigned" %></dd>
+      <dt>Priority Score</dt>
+      <dd><%= @record.priority_score %></dd>
+    </dl>
+  </div>
+  <div>
+    <dl>
+      <dt>Severity</dt>
+      <dd><span class="badge badge-<%= @record.severity %>"><%= @record.severity.to_s.humanize %></span></dd>
+      <dt>Urgency</dt>
+      <dd><span class="badge badge-<%= @record.urgency %>"><%= @record.urgency.to_s.humanize %></span></dd>
+      <dt>Type</dt>
+      <dd><%= @record.issue_type.to_s.humanize %></dd>
+      <dt>Time Open</dt>
+      <dd><%= @record.formatted_time_open %></dd>
+    </dl>
+  </div>
+</div>
+
+<% if @record.test_case %>
+  <p>🔗 Linked to: <%= link_to @record.test_case.name, test_case_path(@record.test_case) %></p>
+<% end %>
+
+<h2>Description</h2>
+<div class="card"><%= simple_format @record.description %></div>
+
+<div class="action-bar">
+  <%= link_to "✏️ Edit", edit_issue_path(@record), class: "btn" %>
+  <%= link_to "← Issues", issues_path, class: "btn" %>
+  <div>
+    <%= link_to "👤 Assign to me", reassign_issue_path(@record), data: { turbo_method: :patch }, params: { assigned_to_id: current_user.id }, class: "btn btn-sm" if @record.assigned_to != current_user %>
+    <%= button_to @record.resolved? ? "🔄 Reopen" : "✅ Resolve", reassign_issue_path(@record), method: :patch, params: { status: @record.resolved? ? "reopened" : "resolved" }, class: "btn btn-sm" unless @record.closed? %>
+    <%= button_to "❌ Close", reassign_issue_path(@record), method: :patch, params: { status: "closed" }, class: "btn btn-sm btn-danger" unless @record.closed? %>
+  </div>
+</div>
+
+<h2>💬 Comments (<%= @comments.size %>)</h2>
+
+<% if @comments.any? %>
+  <% @comments.each do |comment| %>
+    <div class="comment" id="<%= dom_id(comment) %>">
+      <div class="flex">
+        <strong><%= comment.user&.username || "Unknown" %></strong>
+        <span class="text-muted"><%= time_ago_in_words(comment.created_at) %> ago</span>
+        <% if comment.user == current_user || current_user.admin? %>
+          <%= link_to "🗑", issue_issue_comment_path(@record, comment),
+                data: { turbo_method: :delete, turbo_confirm: "Delete?" }, class: "text-danger" %>
+        <% end %>
+      </div>
+      <p><%= simple_format comment.content %></p>
+      <%# ── Emoji Reactions ── %>
+      <div class="reactions" data-controller="emoji-reaction" data-emoji-reaction-url-value="<%= issue_issue_comment_comment_reactions_path(@record, comment) %>">
+        <% CommentReaction.emojis.each do |emoji, label| %>
+          <% count = comment.comment_reactions.where(emoji: emoji).count %>
+          <% mine = comment.comment_reactions.exists?(emoji: emoji, user: current_user) %>
+          <button class="reaction-btn <%= 'active' if mine %>"
+                  data-action="click->emoji-reaction#toggle"
+                  data-emoji="<%= emoji %>"
+                  data-label="<%= label %>">
+            <%= emoji %> <span class="reaction-count"><%= count > 0 ? count : "" %></span>
+          </button>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <p class="text-muted">No comments yet.</p>
+<% end %>
+
+<%# ── Add Comment ── %>
+<div class="card mt-2">
+  <h3>Add a Comment</h3>
+  <%= form_with model: [@record, IssueComment.new], local: false, data: { turbo: true } do |f| %>
+    <div class="field">
+      <%= f.text_area :content, rows: 3, placeholder: "Write your comment... (Markdown supported)" %>
+    </div>
+    <%= f.submit "💬 Comment", class: "btn btn-primary" %>
+  <% end %>
+</div>
+
+<h2>📎 Attachments</h2>
+<% if @record.issue_attachments.any? %>
+  <ul>
+    <% @record.issue_attachments.each do |att| %>
+      <li>
+        <% if att.file.attached? %>
+          <%= link_to att.file.filename, issue_issue_attachment_path(@record, att) %>
+        <% else %>
+          Attachment ##<%= att.id %>
+        <% end %>
+        <%= link_to "🗑", issue_issue_attachment_path(@record, att), data: { turbo_method: :delete, turbo_confirm: "Delete?" }, class: "text-danger" %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="text-muted">No attachments.</p>
+<% end %>
+
+<%= link_to "+ Add Attachment", new_issue_issue_attachment_path(@record), class: "btn btn-sm" %>

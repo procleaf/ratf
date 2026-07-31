@@ -1,0 +1,12 @@
+<%= turbo_stream.append "log_comments_#{@log.id}" do %>
+  <div class="comment" id="<%= dom_id(@comment) %>">
+    <div class="flex">
+      <strong><%= @comment.user.username %></strong>
+      <span class="text-muted"><%= time_ago_in_words(@comment.created_at) %> ago</span>
+      <% if @comment.user == current_user || admin? %>
+        <%= button_to "×", log_log_comment_path(@log, @comment), method: :delete, class: "btn btn-sm btn-danger", form: { style: "display:inline" } %>
+      <% end %>
+    </div>
+    <p><%= @comment.content %></p>
+  </div>
+<% end %>

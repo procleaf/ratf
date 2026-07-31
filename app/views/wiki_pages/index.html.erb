@@ -1,0 +1,28 @@
+<h1>📚 Knowledge Base</h1>
+
+<div class="action-bar">
+  <%= form_with url: wiki_pages_path, method: :get, class: "flex" do |f| %>
+    <%= f.text_field :q, value: params[:q], placeholder: "Search wiki...", style: "width:300px" %>
+    <%= f.submit "Search", class: "btn" %>
+  <% end %>
+  <%= link_to "+ New Page", new_wiki_page_path, class: "btn btn-primary" %>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Title</th><th>Author</th><th>Updated</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    <% @records.each do |page| %>
+      <tr>
+        <td><%= link_to page.title, wiki_page_path(page) %></td>
+        <td class="text-muted"><%= page.author&.username %></td>
+        <td class="text-muted"><%= time_ago_in_words(page.updated_at) %> ago</td>
+        <td>
+          <%= link_to "Edit", edit_wiki_page_path(page), class: "btn btn-sm" %>
+          <%= link_to "Delete", wiki_page_path(page), data: { turbo_method: :delete, turbo_confirm: "Delete?" }, class: "btn btn-sm btn-danger" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

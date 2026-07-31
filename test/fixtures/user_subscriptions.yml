@@ -1,0 +1,11 @@
+admin_sub_open:
+  user: admin
+  issue: open_bug
+
+user_one_sub_open:
+  user: user_one
+  issue: open_bug
+
+manager_sub_in_progress:
+  user: manager
+  issue: in_progress_issue

@@ -1,0 +1,32 @@
+<h2>Create Account</h2>
+
+<%= form_with(model: @user, url: register_path, local: true) do |f| %>
+  <% if @user.errors.any? %>
+    <div class="errors">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited registration:</h2>
+      <ul><% @user.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %></ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :username %>
+    <%= f.text_field :username, autofocus: true, placeholder: "Choose a username" %>
+  </div>
+  <div>
+    <%= f.label :email %>
+    <%= f.email_field :email, placeholder: "you@example.com" %>
+  </div>
+  <div>
+    <%= f.label :password %>
+    <%= f.password_field :password, placeholder: "Min 6 characters" %>
+  </div>
+  <div>
+    <%= f.label :password_confirmation, "Confirm Password" %>
+    <%= f.password_field :password_confirmation, placeholder: "Repeat your password" %>
+  </div>
+  <div>
+    <%= f.submit "Create Account" %>
+  </div>
+<% end %>
+
+<p class="login-footer text-muted">Already have an account? <%= link_to "Sign in", login_path %></p>

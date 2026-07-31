@@ -1,0 +1,71 @@
+<%= form_with(model: record, local: true) do |form| %>
+  <% if record.errors.any? %>
+    <div class="errors">
+      <h2><%= pluralize(record.errors.count, "error") %> prohibited this test suite run from being saved:</h2>
+      <ul>
+        <% record.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :test_suite_id %>
+    <%= form.collection_select :test_suite_id, TestSuite.all, :id, :name, prompt: "Select a test suite" %>
+  </div>
+
+  <div>
+    <%= form.label :job_run_id %>
+    <%= form.number_field :job_run_id %>
+  </div>
+
+  <div>
+    <%= form.label :status %>
+    <%= form.select :status, TestSuiteRun.statuses.keys.map { |k| [k.humanize, k] } %>
+  </div>
+
+  <div>
+    <%= form.label :total_tests %>
+    <%= form.number_field :total_tests %>
+  </div>
+
+  <div>
+    <%= form.label :passed_tests %>
+    <%= form.number_field :passed_tests %>
+  </div>
+
+  <div>
+    <%= form.label :failed_tests %>
+    <%= form.number_field :failed_tests %>
+  </div>
+
+  <div>
+    <%= form.label :skipped_tests %>
+    <%= form.number_field :skipped_tests %>
+  </div>
+
+  <div>
+    <%= form.label :errored_tests %>
+    <%= form.number_field :errored_tests %>
+  </div>
+
+  <div>
+    <%= form.label :total_duration %>
+    <%= form.number_field :total_duration, step: 0.001 %>
+  </div>
+
+  <div>
+    <%= form.label :started_at %>
+    <%= form.datetime_field :started_at %>
+  </div>
+
+  <div>
+    <%= form.label :ended_at %>
+    <%= form.datetime_field :ended_at %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

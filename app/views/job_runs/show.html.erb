@@ -1,0 +1,27 @@
+<h1>Job Run #<%= @record.id %></h1>
+
+<dl>
+  <dt>Job</dt>
+  <dd><%= link_to @record.job.name, job_path(@record.job) if @record.job %></dd>
+
+
+  <dt>Status</dt>
+  <dd><%= @record.status.humanize %></dd>
+
+  <dt>Started At</dt>
+  <dd><%= @record.started_at&.strftime("%Y-%m-%d %H:%M:%S") || "N/A" %></dd>
+
+  <dt>Completed At</dt>
+  <dd><%= @record.completed_at&.strftime("%Y-%m-%d %H:%M:%S") || "N/A" %></dd>
+
+  <dt>Duration</dt>
+  <dd><%= @record.duration ? "#{@record.duration}s" : "N/A" %></dd>
+
+  <dt>Created At</dt>
+  <dd><%= @record.created_at.strftime("%Y-%m-%d %H:%M:%S") %></dd>
+
+  <dt>Updated At</dt>
+  <dd><%= @record.updated_at.strftime("%Y-%m-%d %H:%M:%S") %></dd>
+</dl>
+
+<%= link_to "Back", job_runs_path %>

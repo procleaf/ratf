@@ -1,0 +1,32 @@
+admin:
+  email: admin@ratf.test
+  username: admin
+  password_digest: <%= BCrypt::Password.create("password") %>
+  role: 1
+  api_token: tok_admin_abc123
+  last_active_at: <%= Time.now.iso8601 %>
+
+manager:
+  email: manager@ratf.test
+  username: manager
+  password_digest: <%= BCrypt::Password.create("password") %>
+  role: 2
+  api_token: tok_manager_def456
+  last_active_at: <%= Time.now.iso8601 %>
+
+user_one:
+  email: user1@ratf.test
+  username: user1
+  password_digest: <%= BCrypt::Password.create("password") %>
+  role: 0
+  api_token: tok_user1_ghi789
+  last_active_at: <%= Time.now.iso8601 %>
+
+user_two:
+  email: user2@ratf.test
+  username: user2
+  password_digest: <%= BCrypt::Password.create("password") %>
+  role: 0
+  api_token: tok_user2_jkl012
+  last_active_at: <%= (Time.now - 2.hours).iso8601 %>
+

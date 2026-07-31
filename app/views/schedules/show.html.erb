@@ -1,0 +1,37 @@
+<h1><%= @record.name %></h1>
+
+<dl>
+  <dt>Job</dt>
+  <dd><%= link_to @record.job.name, job_path(@record.job) %></dd>
+
+  <dt>Cron Expression</dt>
+  <dd><code><%= @record.cron_expression %></code></dd>
+
+  <dt>Enabled</dt>
+  <dd><%= @record.enabled? ? "Yes" : "No" %></dd>
+
+  <dt>Description</dt>
+  <dd><%= @record.description.presence || "N/A" %></dd>
+
+  <dt>Last Run At</dt>
+  <dd><%= @record.last_run_at&.strftime("%Y-%m-%d %H:%M:%S") || "Never" %></dd>
+
+  <dt>Next Run At</dt>
+  <dd><%= @record.next_run_at&.strftime("%Y-%m-%d %H:%M:%S") || "N/A" %></dd>
+
+  <dt>Run Count</dt>
+  <dd><%= @record.run_count %></dd>
+
+  <dt>Created At</dt>
+  <dd><%= @record.created_at.strftime("%Y-%m-%d %H:%M:%S") %></dd>
+
+  <dt>Updated At</dt>
+  <dd><%= @record.updated_at.strftime("%Y-%m-%d %H:%M:%S") %></dd>
+</dl>
+
+<div class="actions" style="margin: 1em 0;">
+  <%= button_to "Trigger Now", trigger_schedule_path(@record), method: :post, class: "btn btn-primary", data: { turbo_confirm: "Run this schedule's job immediately?" } %>
+</div>
+
+<%= link_to "Edit", edit_schedule_path(@record) %> |
+<%= link_to "Back", schedules_path %>

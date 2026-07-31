@@ -1,0 +1,60 @@
+<%= form_with(model: record, local: true) do |form| %>
+  <% if record.errors.any? %>
+    <div class="errors">
+      <h2><%= pluralize(record.errors.count, "error") %> prohibited this test suite from being saved:</h2>
+      <ul>
+        <% record.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :project_id %>
+    <%= form.collection_select :project_id, Project.all, :id, :name, prompt: "Select a project" %>
+  </div>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :version %>
+    <%= form.text_field :version %>
+  </div>
+
+  <div>
+    <%= form.label :status %>
+    <%= form.select :status, TestSuite.statuses.keys.map { |k| [k.humanize, k] } %>
+  </div>
+
+  <fieldset>
+    <legend>Metadata</legend>
+
+    <div>
+      <%= form.label :description, "Description" %>
+      <%= form.text_area :description %>
+    </div>
+
+    <div>
+      <%= form.label :author, "Author" %>
+      <%= form.text_field :author %>
+    </div>
+
+    <div>
+      <%= form.label :tags, "Tags" %>
+      <%= form.text_field :tags %>
+    </div>
+
+    <div>
+      <%= form.label :dependencies, "Dependencies" %>
+      <%= form.text_field :dependencies %>
+    </div>
+  </fieldset>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

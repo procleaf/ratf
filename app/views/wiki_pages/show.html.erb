@@ -1,0 +1,19 @@
+<h1><%= @record.title %></h1>
+
+<div class="action-bar">
+  <div>
+    <%= link_to "✏️ Edit", edit_wiki_page_path(@record), class: "btn" %>
+    <%= link_to "← Knowledge Base", wiki_pages_path, class: "btn" %>
+  </div>
+  <span class="text-muted">
+    by <%= @record.author&.username %> · updated <%= time_ago_in_words(@record.updated_at) %> ago
+  </span>
+</div>
+
+<% if @record.tags.present? %>
+  <p class="text-muted">Tags: <%= @record.tags %></p>
+<% end %>
+
+<div class="card">
+  <%= simple_format @record.body %>
+</div>

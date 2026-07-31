@@ -1,0 +1,108 @@
+<%# ── Cloud Summary Bar ── %>
+<div class="cloud-summary">
+  <div class="cloud-summary-item">
+    <span class="cloud-summary-label">Instances</span>
+    <span class="cloud-summary-value"><%= CloudInstance.count %></span>
+  </div>
+  <div class="cloud-summary-item running">
+    <span class="cloud-summary-label">Running</span>
+    <span class="cloud-summary-value"><%= CloudInstance.running.count %></span>
+  </div>
+  <div class="cloud-summary-item stopped">
+    <span class="cloud-summary-label">Stopped</span>
+    <span class="cloud-summary-value"><%= CloudInstance.stopped.count %></span>
+  </div>
+  <div class="cloud-summary-item">
+    <span class="cloud-summary-label">Est. Daily</span>
+    <span class="cloud-summary-value">$<%= sprintf("%.2f", CloudInstance.running.sum(:hourly_cost) * 24) %></span>
+  </div>
+  <div class="cloud-summary-item">
+    <span class="cloud-summary-label">Providers</span>
+    <span class="cloud-summary-value"><%= CloudProvider.connected.count %>/<%= CloudProvider.count %></span>
+  </div>
+</div>
+
+<%# ── Toolbar ── %>
+<div class="action-bar">
+  <div class="flex">
+    <%= form_with url: cloud_instances_path, method: :get, local: true, class: "flex" do |f| %>
+      <%= f.text_field :q, value: params[:q], placeholder: "Search instances...", class: "cloud-search" %>
+      <%= f.select :status, [["All", ""], ["Running", "running"], ["Stopped", "stopped"], ["Error", "error"]], { selected: params[:status] }, class: "cloud-filter" %>
+      <%= f.submit "Search", class: "btn btn-sm" %>
+    <% end %>
+  </div>
+  <div class="flex">
+    <%= link_to "New Instance", new_cloud_instance_path, class: "btn btn-primary" %>
+    <%= link_to "Cloud Providers", cloud_providers_path, class: "btn" %>
+  </div>
+</div>
+
+<%# ── Instance Table ── %>
+<div class="table-responsive">
+  <table>
+    <thead>
+      <tr>
+        <th><input type="checkbox" onclick="document.querySelectorAll('.batch-checkbox').forEach(c=>c.checked=this.checked)"></th>
+        <th>Instance ID/Name</th>
+        <th>Specs</th>
+        <th>Status</th>
+        <th>Network</th>
+        <th>Provider/Zone</th>
+        <th>Billing</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @records.each do |ci| %>
+        <tr>
+          <td><input type="checkbox" class="batch-checkbox" value="<%= ci.id %>"></td>
+          <td>
+            <div class="instance-name"><%= link_to ci.name, cloud_instance_path(ci) %></div>
+            <div class="instance-id text-muted"><%= ci.instance_id %></div>
+          </td>
+          <td>
+            <span class="spec-badge"><%= ci.vcpus %> vCPU</span>
+            <span class="spec-badge"><%= ci.memory_gb %> GB</span>
+            <span class="text-muted"><%= ci.instance_type %></span>
+          </td>
+          <td>
+            <span class="status-dot <%= ci.running? ? 'dot-running' : ci.stopped? ? 'dot-stopped' : 'dot-pending' %>"></span>
+            <span class="badge badge-<%= ci.running? ? 'passed' : ci.stopped? ? 'cancelled' : ci.terminated? ? 'offline' : 'pending' %>"><%= ci.display_status %></span>
+          </td>
+          <td>
+            <% if ci.public_ip %>
+              <div><%= ci.public_ip %> <span class="text-muted">(Public)</span></div>
+            <% end %>
+            <% if ci.private_ip %>
+              <div><%= ci.private_ip %> <span class="text-muted">(Private)</span></div>
+            <% end %>
+            <% unless ci.public_ip || ci.private_ip %>
+              <span class="text-muted">—</span>
+            <% end %>
+          </td>
+          <td>
+            <div><%= ci.cloud_provider.name %></div>
+            <div class="text-muted"><%= ci.availability_zone || ci.cloud_provider.region %></div>
+          </td>
+          <td>
+            <div>$<%= sprintf("%.4f", ci.hourly_cost || 0) %>/hr</div>
+            <div class="text-muted">$<%= sprintf("%.2f", ci.monthly_cost) %>/mo</div>
+          </td>
+          <td>
+            <div class="cloud-actions">
+              <%= link_to "Detail", cloud_instance_path(ci), class: "btn btn-sm" %>
+              <% if ci.running? %>
+                <%= button_to "Stop", stop_cloud_instance_path(ci), method: :post, class: "btn btn-sm btn-warning" %>
+              <% elsif ci.stopped? %>
+                <%= button_to "Start", start_cloud_instance_path(ci), method: :post, class: "btn btn-sm btn-primary" %>
+              <% end %>
+              <% unless ci.terminated? %>
+                <%= button_to "Terminate", terminate_cloud_instance_path(ci), method: :post, class: "btn btn-sm btn-danger", data: { turbo_confirm: "Terminate #{ci.name}?" } %>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

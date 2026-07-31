@@ -1,0 +1,45 @@
+login_passed:
+  name: Login Flow Result
+  status: 0
+  test_case: login_test
+  test_suite: smoke_suite
+  job_run: completed_run
+  execution_time: 1.234
+  started_at: <%= 30.minutes.ago.iso8601 %>
+  ended_at: <%= (30.minutes.ago + 1.234.seconds).iso8601 %>
+  message: All assertions passed
+  metadata: { browser: "chrome", environment: "staging", os: "linux" }
+
+dashboard_failed:
+  name: Dashboard Load Result
+  status: 1
+  test_case: dashboard_test
+  test_suite: smoke_suite
+  job_run: failed_run
+  execution_time: 3.567
+  started_at: <%= 1.hour.ago.iso8601 %>
+  ended_at: <%= (1.hour.ago + 3.567.seconds).iso8601 %>
+  message: Widget timeout exceeded
+  metadata: { browser: "firefox", environment: "staging", os: "linux" }
+
+api_error:
+  name: API Response Time Result
+  status: 2
+  test_case: api_test
+  test_suite: regression_suite
+  job_run: failed_run
+  execution_time: 0.0
+  started_at: <%= 1.hour.ago.iso8601 %>
+  ended_at: <%= 1.hour.ago.iso8601 %>
+  message: Connection refused
+  metadata: { browser: "none", environment: "production", os: "linux" }
+
+skipped_result:
+  name: Skipped Test
+  status: 3
+  test_case: deprecated_test
+  test_suite: legacy_suite
+  job_run: completed_run
+  message: Test skipped due to deprecation
+  metadata: {}
+

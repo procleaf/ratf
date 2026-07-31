@@ -1,0 +1,29 @@
+<h1>Import YAML — <%= @suite.name %></h1>
+
+<p class="text-muted mb-2">Paste YAML with a <code>test_cases</code> array. Each test case can have: name, description, type, priority, steps, preconditions, expected_results.</p>
+
+<%= form_with url: import_preview_test_case_manager_index_path(suite_id: @suite.id), method: :post, local: true do |f| %>
+  <div class="field">
+    <%= f.text_area :yaml_content, rows: 20, placeholder: "test_cases:\n  - name: Login Test\n    description: Verifies login flow\n    type: functional\n    priority: high\n    steps:\n      - Open login page\n      - Enter credentials\n      - Click submit\n    expected_results:\n      - User is redirected to dashboard" %>
+  </div>
+  <%= f.submit "Preview Import", class: "btn btn-primary" %>
+<% end %>
+
+<% if @preview %>
+  <div class="card mt-2">
+    <h2>Preview: <%= @preview["test_cases"].size %> test case(s)</h2>
+    <% @preview["test_cases"].each do |tc| %>
+      <div class="card" style="margin-bottom:8px">
+        <h3><%= tc["name"] %></h3>
+        <p class="text-muted">Type: <%= tc["type"] || "functional" %> | Priority: <%= tc["priority"] || "medium" %></p>
+        <% if tc["steps"].present? %>
+          <p><strong>Steps:</strong> <%= Array(tc["steps"]).join(" → ") %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%= button_to "Confirm Import", import_test_case_manager_index_path(suite_id: @suite.id), method: :post, class: "btn btn-primary mt-2" %>
+  </div>
+<% end %>
+
+<%= link_to "← Back to Editor", editor_test_case_manager_index_path(suite_id: @suite.id), class: "btn mt-2" %>

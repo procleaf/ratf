@@ -1,0 +1,26 @@
+<h1><%= t("models.jobs") %></h1>
+
+<%= link_to t("common.new") + " " + t("models.job"), new_job_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th><%= t("common.name") %></th>
+      <th><%= t("common.status") %></th>
+      <th><%= t("attributes.priority") %></th>
+      <th><%= t("attributes.created_by") %></th>
+      <th><%= t("common.created_at") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |record| %>
+      <tr>
+        <td><%= link_to record.name, job_path(record) %></td>
+        <td><span class="badge badge-<%= record.status %>"><%= t("statuses.#{record.status}") %></span></td>
+        <td><span class="badge badge-<%= record.priority %>"><%= t("statuses.#{record.priority}") %></span></td>
+        <td><%= record.created_by&.username %></td>
+        <td><%= record.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

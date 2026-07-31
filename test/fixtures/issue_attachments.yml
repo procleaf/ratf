@@ -1,0 +1,4 @@
+attachment_one:
+  issue: open_bug
+  # file is an ActiveStorage attachment - skip for fixture
+

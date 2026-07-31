@@ -1,0 +1,15 @@
+login_smoke:
+  test_case: login_test
+  tag: smoke_tag
+
+dashboard_smoke:
+  test_case: dashboard_test
+  tag: smoke_tag
+
+api_regression:
+  test_case: api_test
+  tag: regression_tag
+
+login_critical:
+  test_case: login_test
+  tag: critical_tag

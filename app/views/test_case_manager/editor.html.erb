@@ -1,0 +1,61 @@
+<h1>Editing: <%= @suite.name %> <small class="text-muted">v<%= @suite.version %></small></h1>
+
+<div class="action-bar">
+  <div>
+    <%= link_to "← Manager", test_case_manager_index_path, class: "btn" %>
+    <%= link_to "+ New Test Case", new_test_case_path(test_case: { test_suite_id: @suite.id }), class: "btn btn-primary" %>
+  </div>
+  <div>
+    <%= link_to "📝 Batch Edit", batch_edit_test_case_manager_index_path(suite_id: @suite.id), class: "btn" %>
+    <%= link_to "📥 Export YAML", export_test_case_manager_index_path(suite_id: @suite.id, format: :yml), class: "btn" %>
+    <%= link_to "📤 Import YAML", import_preview_test_case_manager_index_path(suite_id: @suite.id), class: "btn" %>
+  </div>
+</div>
+
+<% if @test_cases.any? %>
+  <% @test_cases.each do |tc| %>
+    <div class="card" style="margin-bottom: 12px">
+      <div class="flex">
+        <h3 style="margin:0; flex:1"><%= tc.name %></h3>
+        <span class="badge badge-<%= tc.priority %>"><%= tc.priority.to_s.humanize %></span>
+        <span class="badge badge-<%= tc.status %>"><%= tc.status.to_s.humanize %></span>
+        <%= link_to "Edit", edit_test_case_path(tc), class: "btn btn-sm" %>
+      </div>
+
+      <% steps = tc.definition&.dig("steps") || tc.definition&.dig(:steps) %>
+      <% preconds = tc.definition&.dig("preconditions") || tc.definition&.dig(:preconditions) %>
+      <% expected = tc.definition&.dig("expected_results") || tc.definition&.dig(:expected_results) %>
+
+      <% if steps.present? %>
+        <p class="text-muted mt-1" style="margin-bottom:4px"><strong>Steps:</strong></p>
+        <ol style="margin-left:24px">
+          <% steps.each do |step| %>
+            <li><%= step %></li>
+          <% end %>
+        </ol>
+      <% end %>
+
+      <% if preconds.present? %>
+        <p class="text-muted mt-1" style="margin-bottom:4px"><strong>Preconditions:</strong></p>
+        <ul style="margin-left:24px">
+          <% preconds.each do |p| %>
+            <li><%= p %></li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <% if expected.present? %>
+        <p class="text-muted mt-1" style="margin-bottom:4px"><strong>Expected Results:</strong></p>
+        <ul style="margin-left:24px">
+          <% expected.each do |e| %>
+            <li><%= e %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="card">
+    <p class="text-muted">No test cases in this suite yet. <%= link_to "Create one", new_test_case_path(test_case: { test_suite_id: @suite.id }) %>.</p>
+  </div>
+<% end %>

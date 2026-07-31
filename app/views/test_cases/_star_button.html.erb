@@ -1,0 +1,8 @@
+<% starred = current_user.favorites.exists?(test_case_id: test_case.id) %>
+<button data-controller="favorite"
+        data-favorite-test-case-id-value="<%= test_case.id %>"
+        data-favorite-starred-value="<%= starred %>"
+        data-action="click->favorite#toggle"
+        class="btn btn-sm">
+  <span class="star-icon"><%= starred ? "⭐" : "☆" %></span>
+</button>

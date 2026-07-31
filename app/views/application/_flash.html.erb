@@ -1,0 +1,10 @@
+<% if flash.any? %>
+  <div class="flashes">
+    <% flash.each do |type, message| %>
+      <div class="flash flash-<%= type %>" data-controller="flash">
+        <span><%= message %></span>
+        <button class="flash-dismiss" data-action="click->flash#dismiss">&times;</button>
+      </div>
+    <% end %>
+  </div>
+<% end %>

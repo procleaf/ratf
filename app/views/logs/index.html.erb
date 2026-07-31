@@ -1,0 +1,61 @@
+<h1>Logs</h1>
+
+<div class="action-bar">
+  <%= form_with url: logs_path, method: :get, id: "logs-search-form" do |f| %>
+    <%= f.text_field :q, value: params[:q], placeholder: "Search logs as you type...", id: "logs-search-input" %>
+    <%= f.submit "Search", class: "btn btn-primary" %>
+    <% if params[:q].present? %>
+      <%= link_to "Clear", logs_path, class: "btn btn-sm" %>
+    <% end %>
+  <% end %>
+</div>
+
+<script>
+(function() {
+  var timer = null;
+  function doSearch(val) {
+    var form = document.getElementById("logs-search-form");
+    var url = form.action + "?q=" + encodeURIComponent(val);
+    fetch(url, { headers: { "Accept": "text/html" } })
+      .then(function(r) { return r.text(); })
+      .then(function(html) {
+        var doc = new DOMParser().parseFromString(html, "text/html");
+        var newBody = doc.querySelector("table tbody");
+        var oldBody = document.querySelector("table tbody");
+        if (newBody && oldBody) oldBody.innerHTML = newBody.innerHTML;
+      });
+  }
+  function attach() {
+    var input = document.getElementById("logs-search-input");
+    if (!input || input.dataset.liveSearchBound) return;
+    input.dataset.liveSearchBound = "1";
+    input.addEventListener("input", function() {
+      clearTimeout(timer);
+      timer = setTimeout(function() { doSearch(input.value); }, 300);
+    });
+  }
+  document.addEventListener("turbo:load", attach);
+  document.addEventListener("DOMContentLoaded", attach);
+  attach();
+})();
+</script>
+
+<table>
+  <thead>
+    <tr>
+      <th>Content Preview</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |log| %>
+      <tr>
+        <td><%= link_to truncate(log.content, length: 120), log_path(log) %></td>
+        <td><%= log.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+      </tr>
+    <% end %>
+    <% if @records.empty? %>
+      <tr><td colspan="2" class="text-muted">No logs found.</td></tr>
+    <% end %>
+  </tbody>
+</table>

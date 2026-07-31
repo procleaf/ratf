@@ -1,0 +1,22 @@
+<h1><%= t("models.projects") %></h1>
+
+<%= link_to t("common.new") + " " + t("models.project"), new_project_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th><%= t("common.name") %></th>
+      <th><%= t("common.description") %></th>
+      <th><%= t("common.status") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |record| %>
+      <tr>
+        <td><%= link_to record.name, project_path(record) %></td>
+        <td><%= record.description&.truncate(60) || "—" %></td>
+        <td><%= record.archived? ? t("statuses.archived") : t("statuses.active") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

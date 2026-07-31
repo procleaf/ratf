@@ -1,0 +1,24 @@
+<h1>API Tokens</h1>
+
+<%= link_to "New Token", new_api_token_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Created</th>
+      <th>Last Used</th>
+      <th>Expires</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |record| %>
+      <tr>
+        <td><%= link_to record.name, api_token_path(record) %></td>
+        <td><%= record.created_at.strftime("%Y-%m-%d") %></td>
+        <td><%= record.last_used_at&.strftime("%Y-%m-%d") || "never" %></td>
+        <td><%= record.expires_at&.strftime("%Y-%m-%d") || "never" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

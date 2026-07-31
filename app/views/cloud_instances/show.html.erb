@@ -1,0 +1,125 @@
+<h1><%= @record.name %></h1>
+
+<%# ── Status Bar ── %>
+<div class="cloud-detail-status">
+  <span class="status-dot <%= @record.running? ? 'dot-running' : @record.stopped? ? 'dot-stopped' : 'dot-pending' %>"></span>
+  <strong><%= @record.display_status %></strong>
+  <% if @record.running? %>
+    <span class="text-muted">· Uptime: <%= @record.uptime_hours.round(1) %> hours</span>
+  <% end %>
+</div>
+
+<%# ── Tabs ── %>
+<div class="cloud-tabs">
+  <a href="#overview" class="cloud-tab active" onclick="return switchTab(event, 'overview')">Overview</a>
+  <a href="#monitoring" class="cloud-tab" onclick="return switchTab(event, 'monitoring')">Monitoring</a>
+  <a href="#network" class="cloud-tab" onclick="return switchTab(event, 'network')">Network & Security</a>
+  <a href="#billing" class="cloud-tab" onclick="return switchTab(event, 'billing')">Billing</a>
+</div>
+
+<%# ── Overview Tab ── %>
+<div id="tab-overview" class="cloud-tab-content">
+  <div class="two-col mt-2">
+    <div class="card">
+      <h2>Basic Information</h2>
+      <dl>
+        <dt>Instance ID</dt><dd><%= @record.instance_id %></dd>
+        <dt>Instance Name</dt><dd><%= @record.name %></dd>
+        <dt>Provider</dt><dd><%= link_to @record.cloud_provider.display_name, cloud_provider_path(@record.cloud_provider) %></dd>
+        <dt>Region/Zone</dt><dd><%= @record.cloud_provider.region %> / <%= @record.availability_zone || "—" %></dd>
+        <dt>Created</dt><dd><%= @record.created_at.strftime("%Y-%m-%d %H:%M") %></dd>
+      </dl>
+    </div>
+    <div class="card">
+      <h2>Specifications</h2>
+      <dl>
+        <dt>Instance Type</dt><dd><%= @record.instance_type %></dd>
+        <dt>vCPUs</dt><dd><%= @record.vcpus %></dd>
+        <dt>Memory</dt><dd><%= @record.memory_gb %> GB</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<%# ── Monitoring Tab ── %>
+<div id="tab-monitoring" class="cloud-tab-content" style="display:none">
+  <div class="charts-grid mt-2">
+    <div class="chart-card">
+      <h3>CPU Usage</h3>
+      <div class="monitor-bar">
+        <div class="monitor-fill" style="width:<%= @record.cpu_usage %>%"></div>
+        <span class="monitor-value"><%= @record.cpu_usage %>%</span>
+      </div>
+      <p class="text-muted"><%= @record.vcpus %> vCPUs</p>
+    </div>
+    <div class="chart-card">
+      <h3>Memory Usage</h3>
+      <div class="monitor-bar">
+        <div class="monitor-fill memory" style="width:<%= @record.memory_usage %>%"></div>
+        <span class="monitor-value"><%= @record.memory_usage %>%</span>
+      </div>
+      <p class="text-muted"><%= @record.memory_gb %> GB total</p>
+    </div>
+    <div class="chart-card">
+      <h3>Disk Usage</h3>
+      <div class="monitor-bar">
+        <div class="monitor-fill disk" style="width:<%= @record.disk_usage %>%"></div>
+        <span class="monitor-value"><%= @record.disk_usage %>%</span>
+      </div>
+      <p class="text-muted">40 GB SSD</p>
+    </div>
+  </div>
+</div>
+
+<%# ── Network Tab ── %>
+<div id="tab-network" class="cloud-tab-content" style="display:none">
+  <div class="card mt-2">
+    <h2>Network Interfaces</h2>
+    <dl>
+      <dt>Public IP</dt><dd><%= @record.public_ip || "—" %></dd>
+      <dt>Private IP</dt><dd><%= @record.private_ip || "—" %></dd>
+      <dt>Availability Zone</dt><dd><%= @record.availability_zone || @record.cloud_provider.region %></dd>
+    </dl>
+  </div>
+  <div class="card mt-2">
+    <h2>Traffic (simulated)</h2>
+    <dl>
+      <dt>Inbound</dt><dd><%= @record.network_in_mbps %> Mbps</dd>
+      <dt>Outbound</dt><dd><%= @record.network_out_mbps %> Mbps</dd>
+    </dl>
+  </div>
+</div>
+
+<%# ── Billing Tab ── %>
+<div id="tab-billing" class="cloud-tab-content" style="display:none">
+  <div class="card mt-2">
+    <h2>Cost Breakdown</h2>
+    <dl>
+      <dt>Hourly Rate</dt><dd>$<%= sprintf("%.4f", @record.hourly_cost || 0) %></dd>
+      <dt>Daily Estimate</dt><dd>$<%= sprintf("%.2f", @record.daily_cost) %></dd>
+      <dt>Monthly Estimate</dt><dd>$<%= sprintf("%.2f", @record.monthly_cost) %></dd>
+      <dt>Uptime</dt><dd><%= @record.uptime_hours.round(1) %> hours</dd>
+    </dl>
+  </div>
+</div>
+
+<%# ── Action Buttons ── %>
+<div class="flex mt-2">
+  <% if @record.running? %>
+    <%= button_to "Stop Instance", stop_cloud_instance_path(@record), method: :post, class: "btn btn-warning" %>
+  <% elsif @record.stopped? %>
+    <%= button_to "Start Instance", start_cloud_instance_path(@record), method: :post, class: "btn btn-primary" %>
+  <% end %>
+  <%= link_to "Edit", edit_cloud_instance_path(@record), class: "btn" %>
+  <%= link_to "All Instances", cloud_instances_path, class: "btn" %>
+</div>
+
+<script>
+  function switchTab(e, name) {
+    document.querySelectorAll('.cloud-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.cloud-tab-content').forEach(c => c.style.display = 'none');
+    e.target.classList.add('active');
+    document.getElementById('tab-' + name).style.display = 'block';
+    return false;
+  }
+</script>

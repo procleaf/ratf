@@ -1,0 +1,20 @@
+<h1>Tags</h1>
+
+<%= link_to "New Tag", new_tag_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Test Cases</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |record| %>
+      <tr>
+        <td><%= link_to record.name, tag_path(record) %></td>
+        <td><%= record.test_cases.count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

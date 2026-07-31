@@ -1,0 +1,40 @@
+login_test:
+  name: Login Flow
+  description: Test the login flow
+  test_suite: smoke_suite
+  created_by: admin
+  status: 1
+  priority: 2
+  test_type: 0
+  definition: { steps: ["visit /login", "fill form", "submit"], preconditions: ["user exists"], expected_results: ["redirect to dashboard"], data: {} }
+
+dashboard_test:
+  name: Dashboard Load
+  description: Verify dashboard loads correctly
+  test_suite: smoke_suite
+  created_by: admin
+  status: 1
+  priority: 1
+  test_type: 0
+  definition: { steps: ["visit /dashboard", "check widgets"], preconditions: ["user logged in"], expected_results: ["all widgets visible"], data: {} }
+
+api_test:
+  name: API Response Time
+  description: Verify API response is under 200ms
+  test_suite: regression_suite
+  created_by: manager
+  status: 1
+  priority: 2
+  test_type: 1
+  definition: { steps: ["send GET /api/v1/status", "measure time"], preconditions: ["server running"], expected_results: ["response time < 200ms"], data: { threshold: 200 } }
+
+deprecated_test:
+  name: Old Feature Test
+  description: Deprecated test case
+  test_suite: legacy_suite
+  created_by: user_one
+  status: 2
+  priority: 0
+  test_type: 0
+  definition: { steps: ["old step"], preconditions: [], expected_results: [], data: {} }
+

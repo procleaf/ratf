@@ -1,0 +1,150 @@
+<h1><%= t("dashboard.title") %></h1>
+
+<%# ── Stats Row ── %>
+<div class="stats-grid">
+  <div class="stat">
+    <div class="stat-label"><%= t("dashboard.total_jobs") %></div>
+    <div class="stat-value"><%= @stats[:total_jobs] %></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label"><%= t("dashboard.running") %></div>
+    <div class="stat-value stat-warning"><%= @stats[:running_jobs] %></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label"><%= t("dashboard.queued") %></div>
+    <div class="stat-value"><%= @stats[:queued_jobs] %></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label"><%= t("dashboard.success_rate") %></div>
+    <div class="stat-value <%= @stats[:success_rate] >= 90 ? 'stat-success' : @stats[:success_rate] >= 70 ? 'stat-warning' : 'stat-danger' %>">
+      <%= @stats[:success_rate] %>%
+    </div>
+  </div>
+  <div class="stat">
+    <div class="stat-label"><%= t("dashboard.avg_duration") %></div>
+    <div class="stat-value"><%= @stats[:avg_duration] || "—" %><span class="stat-unit"><%= t("dashboard.seconds_abbr") %></span></div>
+  </div>
+</div>
+
+<%# ── Summary Cards ── %>
+<div class="charts-grid">
+  <div class="chart-card">
+    <h3>Test Results</h3>
+    <% @stats[:test_result_distribution].each do |label, count| %>
+      <div class="flex" style="justify-content:space-between;padding:4px 0">
+        <span class="badge badge-<%= label.downcase %>"><%= label %></span>
+        <strong><%= count %></strong>
+      </div>
+    <% end %>
+  </div>
+  <div class="chart-card">
+    <h3>Job Status</h3>
+    <% @stats[:job_status_distribution].each do |label, count| %>
+      <div class="flex" style="justify-content:space-between;padding:4px 0">
+        <span class="badge badge-<%= label.downcase %>"><%= label %></span>
+        <strong><%= count %></strong>
+      </div>
+    <% end %>
+  </div>
+  <div class="chart-card">
+    <h3>Cloud Providers</h3>
+    <% providers = CloudProvider.all rescue [] %>
+    <% if providers&.any? %>
+      <% providers.each do |p| %>
+        <div class="flex" style="justify-content:space-between;padding:4px 0">
+          <span class="badge badge-<%= p.connected? ? 'active' : 'offline' %>"><%= p.provider_type.upcase %></span>
+          <strong><%= p.instance_count_by_status["running"] || 0 %></strong>
+          <span class="text-muted">running</span>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-muted">No cloud providers configured.</p>
+    <% end %>
+  </div>
+</div>
+
+<%# ── Recent Activity ── %>
+<div class="card mt-2">
+  <h2><%= t("dashboard.recent_activity") %></h2>
+  <table>
+    <thead>
+      <tr>
+        <th><%= t("dashboard.job") %></th>
+        <th><%= t("common.status") %></th>
+        <th><%= t("dashboard.duration") %></th>
+        <th><%= t("dashboard.time") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @stats[:recent_activity].any? %>
+        <% @stats[:recent_activity].each do |run| %>
+          <tr>
+            <td><%= link_to run[:job_name], job_run_path(run[:id]) %></td>
+            <td><span class="badge badge-<%= run[:status] %>"><%= run[:status].to_s.humanize %></span></td>
+            <td class="text-muted"><%= run[:duration] ? "#{run[:duration]}#{t('dashboard.seconds_abbr')}" : "—" %></td>
+            <td class="text-muted"><%= time_ago_in_words(run[:time]) %> <%= t("dashboard.ago") %></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr><td colspan="4" class="text-muted"><%= t("common.no_data") %></td></tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%# ── Trend Chart ── %>
+<div class="card mt-2">
+  <h2><%= t("dashboard.pass_rate_trend") %></h2>
+  <div class="chart-wrap" style="height:200px">
+    <canvas id="chart-trend"></canvas>
+  </div>
+</div>
+
+<%# ── Flaky & Slow Tests ── %>
+<div class="two-col mt-2">
+  <div class="card">
+    <h2><%= t("dashboard.flaky_tests") %></h2>
+    <p class="text-muted mb-2"><%= t("dashboard.flaky_subtitle") %></p>
+    <% flaky = @stats[:flaky_tests].select { |t| t[:pass_rate] < 90 } %>
+    <% if flaky.any? %>
+      <table>
+        <thead><tr><th><%= t("models.test_case") %></th><th><%= t("dashboard.runs") %></th><th><%= t("dashboard.pass_rate") %></th></tr></thead>
+        <tbody>
+          <% flaky.each do |t| %>
+            <tr>
+              <td><%= link_to t[:name], test_case_path(t[:id]) %></td>
+              <td><%= t[:total_runs] %></td>
+              <td>
+                <span class="badge <%= t[:pass_rate] >= 80 ? 'badge-warning' : 'badge-failed' %>">
+                  <%= t[:pass_rate] %>%
+                </span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-muted"><%= t("dashboard.no_flaky") %></p>
+    <% end %>
+  </div>
+
+  <div class="card">
+    <h2><%= t("dashboard.slowest_tests") %></h2>
+    <% if @stats[:slowest_tests].any? %>
+      <table>
+        <thead><tr><th><%= t("models.test_case") %></th><th><%= t("dashboard.duration") %></th><th><%= t("common.status") %></th></tr></thead>
+        <tbody>
+          <% @stats[:slowest_tests].each do |t| %>
+            <tr>
+              <td><%= link_to t[:name], test_result_path(t[:id]) %></td>
+              <td class="text-muted"><%= t[:execution_time] %><%= t("dashboard.seconds_abbr") %></td>
+              <td><span class="badge badge-<%= t[:status] %>"><%= t[:status].to_s.humanize %></span></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-muted"><%= t("common.no_data") %></p>
+    <% end %>
+  </div>
+</div>

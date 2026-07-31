@@ -1,0 +1,50 @@
+<h1>Test Suite Run #<%= @record.id %></h1>
+
+<dl>
+  <dt>ID</dt>
+  <dd><%= @record.id %></dd>
+
+  <dt>Test Suite</dt>
+  <dd><%= @record.test_suite&.name || "None" %></dd>
+
+  <dt>Job Run</dt>
+  <dd><%= @record.job_run_id || "None" %></dd>
+
+  <dt>Status</dt>
+  <dd><%= @record.status %></dd>
+
+  <dt>Total Tests</dt>
+  <dd><%= @record.total_tests %></dd>
+
+  <dt>Passed Tests</dt>
+  <dd><%= @record.passed_tests %></dd>
+
+  <dt>Failed Tests</dt>
+  <dd><%= @record.failed_tests %></dd>
+
+  <dt>Skipped Tests</dt>
+  <dd><%= @record.skipped_tests %></dd>
+
+  <dt>Errored Tests</dt>
+  <dd><%= @record.errored_tests %></dd>
+
+  <dt>Total Duration</dt>
+  <dd><%= @record.total_duration %></dd>
+
+  <dt>Started At</dt>
+  <dd><%= @record.started_at %></dd>
+
+  <dt>Ended At</dt>
+  <dd><%= @record.ended_at %></dd>
+
+  <dt>Created At</dt>
+  <dd><%= @record.created_at %></dd>
+
+  <dt>Updated At</dt>
+  <dd><%= @record.updated_at %></dd>
+</dl>
+
+<p>
+  
+  <%= link_to "Back to Test Suite Runs", test_suite_runs_path %>
+</p>

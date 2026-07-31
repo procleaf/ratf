@@ -1,0 +1,22 @@
+<h1>Notifications</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Message</th>
+      <th>Type</th>
+      <th>Read</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |record| %>
+      <tr>
+        <td><%= link_to record.message.truncate(80), notification_path(record) %></td>
+        <td><%= record.notification_type.humanize %></td>
+        <td><%= record.read? ? "✓" : "●" %></td>
+        <td><%= record.created_at.strftime("%m-%d %H:%M") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

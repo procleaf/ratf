@@ -1,0 +1,10 @@
+admin_token:
+  name: Admin Default Token
+  token_digest: <%= BCrypt::Password.create("test_token_abc123") %>
+  user: admin
+
+manager_token:
+  name: Manager CI Token
+  token_digest: <%= BCrypt::Password.create("test_token_def456") %>
+  user: manager
+  expires_at: <%= 30.days.from_now.iso8601 %>

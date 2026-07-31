@@ -1,0 +1,28 @@
+<h1><%= t("models.test_cases") %></h1>
+
+<%= link_to t("common.new"), new_test_case_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width:30px"></th>
+      <th><%= t("common.name") %></th>
+      <th><%= t("attributes.test_suite_id") %></th>
+      <th><%= t("common.status") %></th>
+      <th><%= t("attributes.priority") %></th>
+      <th><%= t("attributes.test_type") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |record| %>
+      <tr>
+        <td style="width:30px"><%= render "test_cases/star_button", test_case: record %></td>
+        <td><%= link_to record.name, test_case_path(record) %></td>
+        <td><%= record.test_suite&.name %></td>
+        <td><span class="badge badge-<%= record.status %>"><%= t("statuses.#{record.status}") %></span></td>
+        <td><span class="badge badge-<%= record.priority %>"><%= t("statuses.#{record.priority}") %></span></td>
+        <td><%= t("statuses.#{record.test_type}") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

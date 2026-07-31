@@ -1,0 +1,10 @@
+log_artifact:
+  job: completed_job
+  name: execution.log
+  artifact_type: 0
+
+report_artifact:
+  job: completed_job
+  name: test-report.html
+  artifact_type: 1
+

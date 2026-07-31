@@ -1,0 +1,40 @@
+<h1>⭐ My Favorites</h1>
+
+<% if @records.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Test Case</th>
+        <th>Suite</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Last Result</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @records.each do |tc| %>
+        <tr>
+          <td><%= link_to tc.name, test_case_path(tc) %></td>
+          <td><%= tc.test_suite&.name || "—" %></td>
+          <td><span class="badge badge-<%= tc.priority %>"><%= tc.priority.humanize %></span></td>
+          <td><span class="badge badge-<%= tc.status %>"><%= tc.status.humanize %></span></td>
+          <td>
+            <% last = tc.test_results.order(created_at: :desc).first %>
+            <% if last %>
+              <span class="badge badge-<%= last.status %>"><%= last.status.humanize %></span>
+              <span class="text-muted"><%= last.execution_time %>s</span>
+            <% else %>
+              <span class="text-muted">—</span>
+            <% end %>
+          </td>
+          <td>
+            <%= render "test_cases/star_button", test_case: tc %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="text-muted">No favorites yet. Browse <strong><%= link_to "Test Cases", test_cases_path %></strong> and click the ⭐ to add them here.</p>
+<% end %>

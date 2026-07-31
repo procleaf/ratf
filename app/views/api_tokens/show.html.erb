@@ -1,0 +1,30 @@
+<h1><%= @record.name %></h1>
+
+<dl>
+  <dt>Name</dt>
+  <dd><%= @record.name %></dd>
+
+  <dt>User</dt>
+  <dd><%= @record.user&.username || "N/A" %></dd>
+
+  <dt>Token</dt>
+  <dd>••••••••</dd>
+
+  <dt>Last Used At</dt>
+  <dd><%= @record.last_used_at&.strftime("%Y-%m-%d %H:%M:%S") || "Never" %></dd>
+
+  <dt>Expires At</dt>
+  <dd><%= @record.expires_at&.strftime("%Y-%m-%d %H:%M:%S") || "Never" %></dd>
+
+  <dt>Expired?</dt>
+  <dd><%= @record.expired? ? "Yes" : "No" %></dd>
+
+  <dt>Created At</dt>
+  <dd><%= @record.created_at.strftime("%Y-%m-%d %H:%M:%S") %></dd>
+
+  <dt>Updated At</dt>
+  <dd><%= @record.updated_at.strftime("%Y-%m-%d %H:%M:%S") %></dd>
+</dl>
+
+<%= link_to "Edit", edit_api_token_path(@record) %> |
+<%= link_to "Back", api_tokens_path %>

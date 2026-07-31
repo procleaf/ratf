@@ -1,0 +1,31 @@
+<%= form_with(model: @record, local: true) do |f| %>
+  <% if @record.errors.any? %>
+    <div class="error-messages">
+      <h2><%= pluralize(@record.errors.count, "error") %> prohibited this token from being saved:</h2>
+      <ul>
+        <% @record.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :user_id, "User" %>
+    <%= f.collection_select :user_id, User.order(:username), :id, :username, include_blank: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :expires_at %>
+    <%= f.datetime_field :expires_at %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

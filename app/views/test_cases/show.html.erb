@@ -1,0 +1,75 @@
+<h1><%= @record.name %></h1>
+
+<div class="action-bar">
+  <div>
+    <%= link_to "✏️ Edit", edit_test_case_path(@record), class: "btn" %>
+    <%= link_to "← Test Cases", test_cases_path, class: "btn" %>
+  </div>
+  <div>
+    <%= render "test_cases/star_button", test_case: @record %>
+    <%= button_to "☁️ Run on ECS", ecs_run_cloud_providers_path, method: :post, class: "btn", data: { turbo_confirm: "Run on Aliyun ECS?" }, params: { test_case_id: @record.id } %>
+    <%= button_to "▶ Run", run_test_case_path(@record), method: :post, class: "btn btn-primary", data: { turbo_confirm: "Run this test case now?" } %>
+  </div>
+</div>
+
+<dl>
+  <dt>Status</dt>
+  <dd><span class="badge badge-<%= @record.status %>"><%= @record.status.to_s.humanize %></span></dd>
+
+  <dt>Priority</dt>
+  <dd><span class="badge badge-<%= @record.priority %>"><%= @record.priority.to_s.humanize %></span></dd>
+
+  <dt>Test Type</dt>
+  <dd><%= @record.test_type.to_s.humanize %></dd>
+
+  <dt>Test Suite</dt>
+  <dd><%= link_to @record.test_suite&.name, test_suite_path(@record.test_suite) if @record.test_suite %></dd>
+
+  <dt>Created By</dt>
+  <dd><%= @record.created_by&.username || "—" %></dd>
+
+  <dt>Description</dt>
+  <dd><%= @record.description.presence || "—" %></dd>
+
+  <dt>Steps</dt>
+  <dd>
+    <% steps = Array(@record.definition&.dig("steps") || @record.definition&.dig(:steps) || []) %>
+    <% if steps.any? %>
+      <ol><% steps.each do |s| %><li><code><%= s %></code></li><% end %></ol>
+    <% else %><span class="text-muted">—</span><% end %>
+  </dd>
+
+  <dt>Preconditions</dt>
+  <dd>
+    <% pre = Array(@record.definition&.dig("preconditions") || @record.definition&.dig(:preconditions) || []) %>
+    <%= pre.any? ? pre.join(", ") : "—" %>
+  </dd>
+
+  <dt>Expected Results</dt>
+  <dd>
+    <% exp = Array(@record.definition&.dig("expected_results") || @record.definition&.dig(:expected_results) || []) %>
+    <%= exp.any? ? exp.join(", ") : "—" %>
+  </dd>
+</dl>
+
+<%# ── Recent Results ── %>
+<h2 class="mt-2">📊 Recent Results</h2>
+<% results = @record.test_results.order(created_at: :desc).limit(10) %>
+<% if results.any? %>
+  <table>
+    <thead><tr><th>Name</th><th>Status</th><th>Time</th><th>Message</th><th>Date</th></tr></thead>
+    <tbody>
+      <% results.each do |r| %>
+        <tr>
+          <td><%= r.name %></td>
+          <td><span class="badge badge-<%= r.status %>"><%= r.status.to_s.humanize %></span></td>
+          <td><%= r.execution_time ? "#{r.execution_time}s" : "—" %></td>
+          <td class="text-muted"><%= r.message&.truncate(80) %></td>
+          <td><%= r.created_at.strftime("%m-%d %H:%M") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="text-muted">No results yet. Click "▶ Run" to execute this test case.</p>
+<% end %>

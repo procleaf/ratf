@@ -1,0 +1,22 @@
+<h3><%= @record.persisted? ? "Edit Instance" : "New Instance" %></h3>
+
+<%= form_with(model: @record, local: true) do |f| %>
+  <% if @record.errors.any? %>
+    <div class="errors">
+      <h2><%= pluralize(@record.errors.count, "error") %> prohibited this instance:</h2>
+      <ul><% @record.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %></ul>
+    </div>
+  <% end %>
+
+  <div><%= f.label :cloud_provider_id %><%= f.collection_select :cloud_provider_id, CloudProvider.enabled, :id, :display_name %></div>
+  <div><%= f.label :name %><%= f.text_field :name %></div>
+  <div><%= f.label :instance_id %><%= f.text_field :instance_id %></div>
+  <div><%= f.label :instance_type %><%= f.text_field :instance_type, placeholder: "t3.medium" %></div>
+  <div><%= f.label :public_ip %><%= f.text_field :public_ip %></div>
+  <div><%= f.label :private_ip %><%= f.text_field :private_ip %></div>
+  <div><%= f.label :availability_zone %><%= f.text_field :availability_zone %></div>
+  <div><%= f.label :hourly_cost %><%= f.number_field :hourly_cost, step: 0.0001 %></div>
+  <div><%= f.submit %></div>
+<% end %>
+
+<%= link_to "Back", cloud_instances_path %>

@@ -1,0 +1,61 @@
+<%= form_with(model: issue) do |f| %>
+  <% if issue.errors.any? %>
+    <div class="errors">
+      <h2><%= pluralize(issue.errors.count, "error") %> prohibited this issue from being saved:</h2>
+      <ul>
+        <% issue.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description %>
+    <%= f.text_area :description %>
+  </div>
+
+  <div class="field">
+    <%= f.label :status %>
+    <%= f.select :status, Issue.statuses.keys.map { |k| [k.humanize, k] } %>
+  </div>
+
+  <div class="field">
+    <%= f.label :severity %>
+    <%= f.select :severity, Issue.severities.keys.map { |k| [k.humanize, k] } %>
+  </div>
+
+  <div class="field">
+    <%= f.label :urgency %>
+    <%= f.select :urgency, Issue.urgencies.keys.map { |k| [k.humanize, k] } %>
+  </div>
+
+  <div class="field">
+    <%= f.label :issue_type %>
+    <%= f.select :issue_type, Issue.issue_types.keys.map { |k| [k.humanize, k] } %>
+  </div>
+
+  <div class="field">
+    <%= f.label :assigned_to_id, "Assign to" %>
+    <%= f.collection_select :assigned_to_id, User.all, :id, :username, include_blank: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :test_case_id, "Test Case" %>
+    <%= f.collection_select :test_case_id, ::TestCase.all, :id, :name, include_blank: true %>
+  </div>
+
+  <div class="field">
+    <%= f.label :test_result_id, "Test Result" %>
+    <%= f.collection_select :test_result_id, TestResult.all, :id, :id, include_blank: true %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

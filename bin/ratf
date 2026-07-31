@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+# RATF CLI — command-line interface for the test framework
+# Usage: bin/ratf COMMAND [ARGS]
+
+APP_PATH = File.expand_path("../config/application", __dir__)
+require_relative "../config/boot"
+require APP_PATH
+Rails.application.require_environment!
+
+require_relative "../lib/ratf_cli"
+
+RatfCLI.start(ARGV)

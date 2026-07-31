@@ -1,0 +1,26 @@
+<h1>Schedules</h1>
+
+<%= link_to "New Schedule", new_schedule_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Job</th>
+      <th>Cron</th>
+      <th>Enabled</th>
+      <th>Next Run</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |record| %>
+      <tr>
+        <td><%= link_to record.name, schedule_path(record) %></td>
+        <td><%= record.job&.name %></td>
+        <td class="text-muted"><code><%= record.cron_expression %></code></td>
+        <td><%= record.enabled? ? "Yes" : "No" %></td>
+        <td><%= record.next_run_at&.strftime("%Y-%m-%d %H:%M") || "—" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

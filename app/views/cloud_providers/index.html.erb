@@ -1,0 +1,35 @@
+<h1>Cloud Providers</h1>
+
+<div class="action-bar">
+  <%= link_to "New Provider", new_cloud_provider_path, class: "btn btn-primary" %>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Region</th>
+      <th>Status</th>
+      <th>Instances</th>
+      <th>Est. Monthly</th>
+      <th colspan="4">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |p| %>
+      <tr>
+        <td><%= link_to p.name, cloud_provider_path(p) %></td>
+        <td><%= p.provider_type.upcase %></td>
+        <td><%= p.region %></td>
+        <td><span class="badge badge-<%= p.connected? ? 'passed' : 'pending' %>"><%= p.status.humanize %></span></td>
+        <td><%= p.cloud_instances.count %></td>
+        <td>$<%= sprintf("%.2f", p.monthly_estimated_cost) %></td>
+        <td><%= link_to "Show", cloud_provider_path(p) %></td>
+        <td><%= link_to "Edit", edit_cloud_provider_path(p) %></td>
+        <td><%= button_to "Verify", verify_cloud_provider_path(p), method: :post, class: "btn btn-sm" %></td>
+        <td><%= link_to "Delete", cloud_provider_path(p), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

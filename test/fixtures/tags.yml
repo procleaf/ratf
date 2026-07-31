@@ -1,0 +1,9 @@
+smoke_tag:
+  name: smoke
+
+regression_tag:
+  name: regression
+
+critical_tag:
+  name: critical
+

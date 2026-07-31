@@ -1,0 +1,28 @@
+<%= form_with(model: @record) do |f| %>
+  <% if @record.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@record.errors.count, "error") %> prohibited this notification from being saved:</h2>
+      <ul>
+        <% @record.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :user_id %>
+    <%= f.collection_select :user_id, User.order(:username), :id, :username, include_blank: true %>
+  </div>
+  <div>
+    <%= f.label :message %>
+    <%= f.text_area :message %>
+  </div>
+  <div>
+    <%= f.label :notification_type %>
+    <%= f.select :notification_type, Notification.notification_types.keys.map { |t| [t.humanize, t] } %>
+  </div>
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

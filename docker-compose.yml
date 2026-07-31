@@ -1,0 +1,79 @@
+version: "3.8"
+
+# ── RATF Production Docker Compose ──────────────────────────
+# Usage:
+#   1. Copy .env.example to .env and fill in values
+#   2. docker compose up -d
+#   3. docker compose exec app bin/rails db:prepare
+
+services:
+  app:
+    build: .
+    image: ratf-web:latest
+    container_name: ratf-app
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:80"
+    env_file: .env
+    environment:
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: "true"
+    volumes:
+      - app-storage:/rails/storage
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/up"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  db:
+    image: postgres:16-alpine
+    container_name: ratf-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-ratf}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-ratf_secret}
+      POSTGRES_DB: ${DB_NAME:-ratf_production}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-ratf}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: ratf-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  worker:
+    image: ratf-web:latest
+    container_name: ratf-worker
+    restart: unless-stopped
+    command: bundle exec rake solid_queue:start
+    env_file: .env
+    environment:
+      RAILS_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  app-storage:
+  db-data:
+  redis-data:

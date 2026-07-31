@@ -1,0 +1,28 @@
+<h1><%= t("models.issues") %></h1>
+
+<%= link_to t("common.new") + " " + t("models.issue"), new_issue_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th><%= t("attributes.title") %></th>
+      <th><%= t("common.status") %></th>
+      <th><%= t("attributes.severity") %></th>
+      <th><%= t("attributes.issue_type") %></th>
+      <th><%= t("attributes.reported_by") %></th>
+      <th><%= t("attributes.assigned_to") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |issue| %>
+      <tr>
+        <td><%= link_to issue.title, issue_path(issue) %></td>
+        <td><span class="badge badge-<%= issue.status %>"><%= t("statuses.#{issue.status}") %></span></td>
+        <td><span class="badge badge-<%= issue.severity %>"><%= t("statuses.#{issue.severity}") %></span></td>
+        <td><%= t("statuses.#{issue.issue_type}") %></td>
+        <td><%= issue.reported_by&.username %></td>
+        <td><%= issue.assigned_to&.username || "—" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

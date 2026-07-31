@@ -1,0 +1,18 @@
+<h1><%= @record.title %></h1>
+
+<dl>
+  <dt>Author</dt>
+  <dd><%= @record.user&.username %></dd>
+
+  <dt>Content</dt>
+  <dd><%= simple_format @record.content %></dd>
+
+  <dt>Created</dt>
+  <dd><%= l @record.created_at, format: :long %></dd>
+
+  <dt>Updated</dt>
+  <dd><%= l @record.updated_at, format: :long %></dd>
+</dl>
+
+<%= link_to "Edit", edit_post_path(@record) %> |
+<%= link_to "Back to Posts", posts_path %>

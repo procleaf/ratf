@@ -1,0 +1,28 @@
+<h1><%= @record.name %></h1>
+
+<dl>
+  <dt>Job</dt>
+  <dd><%= link_to @record.job.name, job_path(@record.job) if @record.job %></dd>
+
+  <dt>Artifact Type</dt>
+  <dd><%= @record.artifact_type.humanize %></dd>
+
+  <dt>File</dt>
+  <dd>
+    <% if @record.file.attached? %>
+      <%= link_to @record.file.filename, @record.file %>
+      (<%= @record.human_readable_size %>)
+    <% else %>
+      No file attached
+    <% end %>
+  </dd>
+
+  <dt>Created At</dt>
+  <dd><%= @record.created_at.strftime("%Y-%m-%d %H:%M:%S") %></dd>
+
+  <dt>Updated At</dt>
+  <dd><%= @record.updated_at.strftime("%Y-%m-%d %H:%M:%S") %></dd>
+</dl>
+
+<%= link_to "Edit", edit_job_artifact_path(@record) %> |
+<%= link_to "Back", job_artifacts_path %>

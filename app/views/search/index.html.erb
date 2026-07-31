@@ -1,0 +1,39 @@
+<h1>Global Search</h1>
+
+<%= form_with url: search_index_path, method: :get, local: true, class: "search-form" do |f| %>
+  <div class="search-field">
+    <%= f.text_field :q, value: @query, placeholder: "Search across jobs, tests, issues, posts, projects…", class: "search-input" %>
+    <%= f.submit "Search", class: "btn" %>
+  </div>
+<% end %>
+
+<% if @query.blank? %>
+  <p class="search-hint">Enter a search term above to find matching records.</p>
+<% elsif @results.values.all?(&:empty?) %>
+  <p class="search-empty">No results found for "<strong><%= @query %></strong>".</p>
+<% else %>
+  <div class="search-results">
+    <% @results.each do |model_key, records| %>
+      <% next if records.empty? %>
+      <section class="search-group">
+        <h2><%= model_key.to_s.titleize %> (<%= records.size %>)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name / Title</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% records.each do |record| %>
+              <tr>
+                <td><%= link_to (record.respond_to?(:title) ? record.title : record.name), record %></td>
+                <td><%= truncate((record.respond_to?(:description) ? record.description : record.respond_to?(:host) ? record.host : record.respond_to?(:content) ? record.content : "").to_s, length: 80) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </section>
+    <% end %>
+  </div>
+<% end %>

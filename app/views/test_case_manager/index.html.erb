@@ -1,0 +1,37 @@
+<h1>Test Case Manager</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Suite</th>
+      <th>Version</th>
+      <th>Project</th>
+      <th>Status</th>
+      <th>Cases</th>
+      <th colspan="5">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @suites.each do |suite| %>
+      <tr>
+        <td><strong><%= suite.name %></strong></td>
+        <td><%= suite.version || "—" %></td>
+        <td><%= suite.project&.name || "—" %></td>
+        <td><span class="badge badge-<%= suite.status %>"><%= suite.status.to_s.humanize %></span></td>
+        <td><%= suite.test_cases.count %></td>
+        <td><%= link_to "✏️ Edit", editor_test_case_manager_index_path(suite_id: suite.id), class: "btn btn-sm" %></td>
+        <td><%= link_to "📝 Batch Edit", batch_edit_test_case_manager_index_path(suite_id: suite.id), class: "btn btn-sm" %></td>
+        <td><%= link_to "📥 Export", export_test_case_manager_index_path(suite_id: suite.id, format: :yml), class: "btn btn-sm" %></td>
+        <td><%= link_to "📤 Import", import_preview_test_case_manager_index_path(suite_id: suite.id), class: "btn btn-sm" %></td>
+        <td>
+          <%= form_with url: clone_test_case_manager_index_path(suite_id: suite.id), method: :post, class: "flex", style: "display:inline" do |f| %>
+            <%= f.text_field :new_name, placeholder: "New name", style: "width:140px; display:inline" %>
+            <%= f.submit "📋 Clone", class: "btn btn-sm btn-primary" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "← Dashboard", root_path, class: "btn mt-2" %>

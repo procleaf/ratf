@@ -1,0 +1,75 @@
+<%= form_with(model: record, local: true) do |form| %>
+  <% if record.errors.any? %>
+    <div class="errors">
+      <h2><%= pluralize(record.errors.count, "error") %> prohibited this test case from being saved:</h2>
+      <ul>
+        <% record.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :test_suite_id %>
+    <%= form.collection_select :test_suite_id, TestSuite.all, :id, :name, prompt: "Select a test suite" %>
+  </div>
+
+  <div>
+    <%= form.label :created_by_id %>
+    <%= form.collection_select :created_by_id, User.all, :id, :name, prompt: "Select a user" %>
+  </div>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div>
+    <%= form.label :status %>
+    <%= form.select :status, @record.class.statuses.keys.map { |k| [k.humanize, k] } %>
+  </div>
+
+  <div>
+    <%= form.label :priority %>
+    <%= form.select :priority, @record.class.priorities.keys.map { |k| [k.humanize, k] } %>
+  </div>
+
+  <div>
+    <%= form.label :test_type %>
+    <%= form.select :test_type, @record.class.test_types.keys.map { |k| [k.humanize, k] } %>
+  </div>
+
+  <fieldset>
+    <legend>Definition</legend>
+
+    <div>
+      <%= form.label :steps, "Steps" %>
+      <%= form.text_area :steps %>
+    </div>
+
+    <div>
+      <%= form.label :preconditions, "Preconditions" %>
+      <%= form.text_area :preconditions %>
+    </div>
+
+    <div>
+      <%= form.label :expected_results, "Expected Results" %>
+      <%= form.text_area :expected_results %>
+    </div>
+
+    <div>
+      <%= form.label :data, "Data" %>
+      <%= form.text_area :data %>
+    </div>
+  </fieldset>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

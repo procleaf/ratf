@@ -1,0 +1,93 @@
+<h1>Log #<%= @record.id %></h1>
+
+<div class="action-bar">
+  <%= link_to "← Logs", logs_path, class: "btn" %>
+  <span class="text-muted">Created <%= @record.created_at.strftime("%Y-%m-%d %H:%M:%S") %></span>
+</div>
+
+<h2>Content</h2>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('view')">View</button>
+  <button class="tab" onclick="switchTab('live')">Live</button>
+</div>
+
+<div id="tab-view">
+  <%= render "application/terminal", title: "log ##{@record.id}", content: @record.content %>
+</div>
+
+<div id="tab-live" style="display:none">
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="terminal-dot" style="background:#ff5f57"></span>
+      <span class="terminal-dot" style="background:#febc2e"></span>
+      <span class="terminal-dot" style="background:#28c840"></span>
+      <span class="terminal-title">live stream — <%= @record.id %></span>
+      <span class="terminal-actions">
+        <button class="terminal-action" id="live-toggle-btn" onclick="toggleLive()">⏯ Toggle</button>
+      </span>
+    </div>
+    <div class="terminal-body" style="max-height:500px;overflow-y:auto" id="live-body-wrap">
+      <pre id="live-body"><%= @record.content %></pre>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(name) {
+  document.getElementById("tab-view").style.display = name === "view" ? "" : "none";
+  document.getElementById("tab-live").style.display = name === "live" ? "" : "none";
+  document.querySelectorAll(".tab").forEach(function(b) {
+    b.classList.toggle("active", (name === "view" && b.textContent === "View") || (name === "live" && b.textContent === "Live"));
+  });
+}
+var liveTimer = null, liveRunning = false;
+function toggleLive() {
+  liveRunning = !liveRunning;
+  document.getElementById("live-toggle-btn").textContent = liveRunning ? "⏸ Stop" : "▶ Start";
+  if (liveRunning) pollLive(); else clearInterval(liveTimer);
+}
+function pollLive() {
+  liveTimer = setInterval(function() {
+    fetch("<%= stream_log_path(@record) %>", { headers: { "Accept": "text/plain" } })
+      .then(function(r) { return r.text(); })
+      .then(function(text) {
+        var el = document.getElementById("live-body");
+        if (el.textContent !== text) {
+          var atBottom = document.getElementById("live-body-wrap").scrollHeight - document.getElementById("live-body-wrap").scrollTop - document.getElementById("live-body-wrap").clientHeight < 40;
+          el.textContent = text;
+          if (atBottom) document.getElementById("live-body-wrap").scrollTop = document.getElementById("live-body-wrap").scrollHeight;
+        }
+      });
+  }, 1000);
+}
+</script>
+
+<h2>💬 Comments (<%= @record.log_comments.count %>)</h2>
+
+<% if @record.log_comments.any? %>
+  <% @record.log_comments.recent.each do |comment| %>
+    <div class="comment">
+      <div class="flex">
+        <strong><%= comment.user&.username || "Unknown" %></strong>
+        <span class="text-muted"><%= time_ago_in_words(comment.created_at) %> ago</span>
+        <% if comment.user == current_user || current_user.admin? %>
+          <%= button_to "×", log_log_comment_path(@record, comment), method: :delete, class: "btn btn-sm btn-danger", form: { style: "display:inline" } %>
+        <% end %>
+      </div>
+      <p><%= comment.content %></p>
+    </div>
+  <% end %>
+<% else %>
+  <p class="text-muted">No comments yet.</p>
+<% end %>
+
+<div class="card mt-2">
+  <h3>Add a Comment</h3>
+  <%= form_with model: [@record, LogComment.new], local: true do |f| %>
+    <div class="field">
+      <%= f.text_area :content, rows: 3, placeholder: "Write your comment..." %>
+    </div>
+    <%= f.submit "💬 Comment", class: "btn btn-primary" %>
+  <% end %>
+</div>

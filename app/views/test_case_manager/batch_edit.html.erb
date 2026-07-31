@@ -1,0 +1,55 @@
+<h1>Batch Edit: <%= @suite.name %></h1>
+<p class="text-muted mb-2">Edit all test cases at once. Steps, preconditions, and expected results — one per line.</p>
+
+<%= form_with url: batch_update_test_case_manager_index_path(suite_id: @suite.id), method: :patch do |f| %>
+  <% @test_cases.each do |tc| %>
+    <% steps = tc.definition&.dig("steps") || tc.definition&.dig(:steps) || [] %>
+    <% preconds = tc.definition&.dig("preconditions") || tc.definition&.dig(:preconditions) || [] %>
+    <% expected = tc.definition&.dig("expected_results") || tc.definition&.dig(:expected_results) || [] %>
+
+    <div class="card" style="margin-bottom:16px">
+      <h3>Test Case: <%= tc.name %></h3>
+
+      <div class="field">
+        <label>Name</label>
+        <%= text_field_tag "test_cases[#{tc.id}][name]", tc.name %>
+      </div>
+
+      <div class="field">
+        <label>Description</label>
+        <%= text_area_tag "test_cases[#{tc.id}][description]", tc.description, rows: 2 %>
+      </div>
+
+      <div style="display:flex; gap:12px">
+        <div class="field" style="flex:1">
+          <label>Priority</label>
+          <%= select_tag "test_cases[#{tc.id}][priority]",
+                options_for_select(TestCase.priorities.keys.map { |k| [k.humanize, k] }, tc.priority) %>
+        </div>
+        <div class="field" style="flex:1">
+          <label>Type</label>
+          <%= select_tag "test_cases[#{tc.id}][test_type]",
+                options_for_select(TestCase.test_types.keys.map { |k| [k.humanize, k] }, tc.test_type) %>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Steps (one per line)</label>
+        <%= text_area_tag "test_cases[#{tc.id}][steps]", steps.join("\n"), rows: 4 %>
+      </div>
+
+      <div class="field">
+        <label>Preconditions (one per line)</label>
+        <%= text_area_tag "test_cases[#{tc.id}][preconditions]", preconds.join("\n"), rows: 2 %>
+      </div>
+
+      <div class="field">
+        <label>Expected Results (one per line)</label>
+        <%= text_area_tag "test_cases[#{tc.id}][expected_results]", expected.join("\n"), rows: 2 %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= f.submit "Save All #{@test_cases.size} Test Cases", class: "btn btn-primary" %>
+  <%= link_to "Cancel", editor_test_case_manager_index_path(suite_id: @suite.id), class: "btn" %>
+<% end %>

@@ -1,0 +1,18 @@
+issue_assignment_note:
+  user: user_one
+  notification_type: 0
+  message: "Issue assigned to you: Dashboard widget not rendering"
+  read_at:
+
+job_completed_note:
+  user: admin
+  notification_type: 2
+  message: "Job 'Unit Tests' completed successfully"
+  read_at:
+
+unread_note:
+  user: manager
+  notification_type: 5
+  message: "System maintenance scheduled for tonight"
+  read_at:
+

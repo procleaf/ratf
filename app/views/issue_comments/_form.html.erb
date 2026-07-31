@@ -1,0 +1,21 @@
+<%= form_with(model: @record, url: @record.persisted? ? issue_issue_comment_path(@issue, @record) : issue_issue_comments_path(@issue), local: true) do |f| %>
+  <% if @record.errors.any? %>
+    <div class="errors">
+      <h2><%= pluralize(@record.errors.count, "error") %> prohibited this comment:</h2>
+      <ul>
+        <% @record.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :content %>
+    <%= f.text_area :content, rows: 5 %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

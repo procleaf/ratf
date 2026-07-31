@@ -1,0 +1,26 @@
+aws_provider:
+  name: AWS Production
+  provider_type: aws
+  region: us-east-1
+  enabled: true
+  status: connected
+  user: admin
+  config: { "access_key": "AKIA_TEST" }
+
+gcp_provider:
+  name: GCP Staging
+  provider_type: gcp
+  region: us-central1
+  enabled: true
+  status: pending
+  user: manager
+  config: {}
+
+azure_provider:
+  name: Azure Dev
+  provider_type: azure
+  region: westeurope
+  enabled: false
+  status: error
+  user: admin
+  config: {}

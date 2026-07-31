@@ -1,0 +1,22 @@
+pending_run:
+  job: pending_job
+  status: 0
+  started_at: <%= 1.minute.ago.iso8601 %>
+
+running_run:
+  job: running_job
+  status: 1
+  started_at: <%= 10.minutes.ago.iso8601 %>
+
+completed_run:
+  job: completed_job
+  status: 2
+  started_at: <%= 1.hour.ago.iso8601 %>
+  completed_at: <%= 30.minutes.ago.iso8601 %>
+
+failed_run:
+  job: failed_job
+  status: 3
+  started_at: <%= 2.hours.ago.iso8601 %>
+  completed_at: <%= 1.hour.ago.iso8601 %>
+

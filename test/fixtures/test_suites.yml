@@ -1,0 +1,21 @@
+smoke_suite:
+  name: Smoke Tests
+  version: "1.0.0"
+  status: 0
+  project: active_project
+  metadata: { description: "Core smoke test suite", author: "admin", tags: ["smoke", "core"], version: "1.0", dependencies: [] }
+
+regression_suite:
+  name: Regression Tests
+  version: "2.1.0"
+  status: 0
+  project: active_project
+  metadata: { description: "Full regression suite", author: "manager", tags: ["regression"], version: "2.1", dependencies: ["smoke_suite"] }
+
+legacy_suite:
+  name: Legacy Suite
+  version: "0.9.5"
+  status: 2
+  project: archived_project
+  metadata: { description: "Deprecated legacy tests", author: "admin", tags: ["legacy"], version: "0.9", dependencies: [] }
+

@@ -1,0 +1,27 @@
+<%# Bulk actions partial — embed inside a data-controller="bulk-select" wrapper %>
+<%# Locals: model_name (e.g. "Job"), select_all_label ("Select All" / "Deselect All") %>
+
+<div data-controller="bulk-select"
+     data-bulk-select-model-value="<%= local_assigns[:model_name] || 'Job' %>"
+     data-bulk-select-action-url-value="<%= bulk_operations_path %>">
+
+  <button class="btn btn-sm" data-action="bulk-select#toggleAll" data-bulk-select-target="selectAll">
+    <%= local_assigns[:select_all_label] || "Select All" %>
+  </button>
+
+  <form data-bulk-select-target="form"
+        action="<%= bulk_operations_path %>"
+        method="post"
+        style="display:none;"
+        onsubmit="return confirm('Apply this action to the selected records?');">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <input type="hidden" name="model" value="<%= local_assigns[:model_name] || 'Job' %>">
+    <input type="hidden" name="ids" value="">
+    <select name="bulk_action" class="bulk-action-select">
+      <option value="">— Bulk Action —</option>
+      <option value="delete">Delete</option>
+      <option value="archive">Archive</option>
+    </select>
+    <button type="submit" class="btn btn-sm" data-action="bulk-select#submit">Apply</button>
+  </form>
+</div>

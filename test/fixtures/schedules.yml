@@ -1,0 +1,15 @@
+daily_smoke:
+  name: Daily Smoke Test
+  cron_expression: "0 6 * * *"
+  job: pending_job
+  enabled: true
+  description: Runs smoke tests every morning at 6am
+  run_count: 5
+
+weekly_regression:
+  name: Weekly Regression
+  cron_expression: "0 0 * * 0"
+  job: running_job
+  enabled: false
+  description: Runs full regression every Sunday midnight
+  run_count: 0

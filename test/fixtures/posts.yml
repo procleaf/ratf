@@ -1,0 +1,10 @@
+post_one:
+  user: admin
+  title: Release Notes v1.0
+  content: We are pleased to announce the release of RATF v1.0 with improved test execution.
+
+post_two:
+  user: manager
+  title: Testing Best Practices
+  content: Here are some best practices for writing effective test suites.
+

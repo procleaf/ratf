@@ -1,0 +1,95 @@
+<%= form_with(model: record, local: true) do |form| %>
+  <% if record.errors.any? %>
+    <div class="errors">
+      <h2><%= pluralize(record.errors.count, "error") %> prohibited this test result from being saved:</h2>
+      <ul>
+        <% record.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :job_run_id %>
+    <%= form.number_field :job_run_id %>
+  </div>
+
+  <div>
+    <%= form.label :test_case_id %>
+    <%= form.collection_select :test_case_id, ::TestCase.all, :id, :name, prompt: "Select a test case" %>
+  </div>
+
+  <div>
+    <%= form.label :test_suite_id %>
+    <%= form.collection_select :test_suite_id, TestSuite.all, :id, :name, prompt: "Select a test suite" %>
+  </div>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :status %>
+    <%= form.select :status, TestResult.statuses.keys.map { |k| [k.humanize, k] } %>
+  </div>
+
+  <div>
+    <%= form.label :execution_time %>
+    <%= form.number_field :execution_time, step: 0.001 %>
+  </div>
+
+  <div>
+    <%= form.label :message %>
+    <%= form.text_area :message %>
+  </div>
+
+  <div>
+    <%= form.label :started_at %>
+    <%= form.datetime_field :started_at %>
+  </div>
+
+  <div>
+    <%= form.label :ended_at %>
+    <%= form.datetime_field :ended_at %>
+  </div>
+
+  <fieldset>
+    <legend>Metadata</legend>
+
+    <div>
+      <%= form.label :browser, "Browser" %>
+      <%= form.text_field :browser %>
+    </div>
+
+    <div>
+      <%= form.label :environment, "Environment" %>
+      <%= form.text_field :environment %>
+    </div>
+
+    <div>
+      <%= form.label :os, "OS" %>
+      <%= form.text_field :os %>
+    </div>
+
+    <div>
+      <%= form.label :version, "Version" %>
+      <%= form.text_field :version %>
+    </div>
+
+    <div>
+      <%= form.label :tags, "Tags" %>
+      <%= form.text_field :tags %>
+    </div>
+
+    <div>
+      <%= form.label :custom_data, "Custom Data" %>
+      <%= form.text_field :custom_data %>
+    </div>
+  </fieldset>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

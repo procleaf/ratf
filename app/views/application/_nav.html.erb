@@ -1,0 +1,36 @@
+<nav class="main-nav" data-controller="nav">
+  <div class="nav-header">
+    <div class="nav-brand"><%= link_to t("app.name"), root_path %></div>
+    <div class="theme-toggle" data-controller="theme">
+      <button data-theme-target="button" data-action="click->theme#set" data-theme="light" title="<%= t('theme.light') %>">☀️</button>
+      <button data-theme-target="button" data-action="click->theme#set" data-theme="dark" title="<%= t('theme.dark') %>">🌙</button>
+      <button data-theme-target="button" data-action="click->theme#set" data-theme="system" title="<%= t('theme.system') %>">💻</button>
+    </div>
+    <div class="theme-toggle" data-controller="locale" style="margin-left:4px">
+      <button data-locale-target="button" data-action="click->locale#set" data-locale="en" title="English">EN</button>
+      <button data-locale-target="button" data-action="click->locale#set" data-locale="zh" title="中文">中文</button>
+    </div>
+    <% if logged_in? %>
+      <div class="nav-user">
+        <%= link_to current_user.username, user_path(current_user), class: "nav-user-link" %>
+        <%= link_to "Logout", logout_path, data: { turbo_method: :delete }, class: "nav-logout" %>
+      </div>
+    <% end %>
+    <button class="nav-toggle" data-action="click->nav#toggle" aria-label="<%= t('nav.toggle_menu') %>">
+      <span data-nav-target="icon">☰</span>
+    </button>
+  </div>
+  <div class="nav-links" data-nav-target="menu">
+    <%= link_to t("nav.dashboard"), root_path, data: { action: "click->nav#close" } %>
+    <%= link_to t("nav.jobs"), jobs_path, data: { action: "click->nav#close" } %>
+    <%= link_to "☁️ Cloud", cloud_providers_path, data: { action: "click->nav#close" } %>
+    <%= link_to t("nav.schedules"), schedules_path, data: { action: "click->nav#close" } %>
+    <%= link_to t("nav.api_tokens"), api_tokens_path, data: { action: "click->nav#close" } %>
+    <%= link_to t("nav.test_suites"), test_suites_path, data: { action: "click->nav#close" } %>
+    <%= link_to t("nav.test_cases"), test_cases_path, data: { action: "click->nav#close" } %>
+    <%= link_to t("nav.issues"), issues_path, data: { action: "click->nav#close" } %>
+    <%= link_to t("nav.logs"), logs_path, data: { action: "click->nav#close" } %>
+    <%= link_to t("nav.posts"), posts_path, data: { action: "click->nav#close" } %>
+    <%= link_to "🔍", search_index_path, class: "nav-search-link", data: { action: "click->nav#close" }, title: t("nav.search") %>
+  </div>
+</nav>

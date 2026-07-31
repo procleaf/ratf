@@ -1,0 +1,54 @@
+<h1><%= @record.name %></h1>
+
+<dl>
+  <dt>Description</dt>
+  <dd><%= @record.description.presence || "N/A" %></dd>
+
+  <dt>Status</dt>
+  <dd><%= @record.status.humanize %></dd>
+
+  <dt>Priority</dt>
+  <dd><%= @record.priority.humanize %></dd>
+
+  <dt>Created By</dt>
+  <dd><%= @record.created_by&.username || "N/A" %></dd>
+
+  <dt>Started At</dt>
+  <dd><%= @record.started_at&.strftime("%Y-%m-%d %H:%M:%S") || "N/A" %></dd>
+
+  <dt>Completed At</dt>
+  <dd><%= @record.completed_at&.strftime("%Y-%m-%d %H:%M:%S") || "N/A" %></dd>
+
+  <dt>Progress</dt>
+  <dd><%= @record.progress_percentage %>%</dd>
+
+  <dt>Success Rate</dt>
+  <dd><%= @record.success_rate %>%</dd>
+
+  <dt>Average Runtime</dt>
+  <dd><%= @record.average_runtime ? "#{@record.average_runtime.round(2)}s" : "N/A" %></dd>
+
+  <dt>Total Runtime</dt>
+  <dd><%= @record.total_runtime ? "#{@record.total_runtime.round(2)}s" : "N/A" %></dd>
+
+  <dt>Latest Run</dt>
+  <dd>
+    <% if (lr = @record.latest_run) %>
+      <%= link_to "Run ##{lr.id} (#{lr.status.humanize})", job_run_path(lr) %>
+    <% else %>
+      N/A
+    <% end %>
+  </dd>
+
+  <dt>Definition</dt>
+  <dd><pre><%= JSON.pretty_generate(@record.definition) %></pre></dd>
+
+  <dt>Created At</dt>
+  <dd><%= @record.created_at.strftime("%Y-%m-%d %H:%M:%S") %></dd>
+
+  <dt>Updated At</dt>
+  <dd><%= @record.updated_at.strftime("%Y-%m-%d %H:%M:%S") %></dd>
+</dl>
+
+<%= link_to "Edit", edit_job_path(@record) %> |
+<%= link_to "Back", jobs_path %>

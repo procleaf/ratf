@@ -1,0 +1,15 @@
+<h1>Comment</h1>
+
+<dl>
+  <dt>Issue</dt>
+  <dd><%= link_to @record.issue.title, issue_path(@record.issue) %></dd>
+  <dt>User</dt>
+  <dd><%= @record.user&.username %></dd>
+  <dt>Content</dt>
+  <dd><%= simple_format @record.content %></dd>
+  <dt>Created</dt>
+  <dd><%= l @record.created_at, format: :long %></dd>
+</dl>
+
+<%= link_to "Edit", edit_issue_issue_comment_path(@issue, @record) %> |
+<%= link_to "Back", issue_issue_comments_path(@issue) %>

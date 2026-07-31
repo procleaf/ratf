@@ -1,0 +1,15 @@
+comment_one:
+  issue: open_bug
+  user: admin
+  content: I can reproduce this on Chrome 120. Looking into the root cause.
+
+comment_two:
+  issue: open_bug
+  user: user_one
+  content: Found the issue - the ChartWidget component is missing a null check for empty data sets.
+
+comment_three:
+  issue: in_progress_issue
+  user: manager
+  content: This is related to the recent DB connection pool changes. Investigating.
+

@@ -1,0 +1,26 @@
+<header class="app-header">
+  <% if logged_in? %>
+    <%= link_to search_index_path, class: "header-icon", title: "Search" do %>
+      🔍
+    <% end %>
+
+    <%= link_to notifications_path, class: "notification-bell", title: "Notifications" do %>
+      🔔
+      <span class="notification-badge"
+            data-controller="notifications"
+            data-notifications-url-value="/notifications/unread_count"
+            data-notifications-target="badge"
+            style="display: none;">0</span>
+    <% end %>
+
+    <div class="user-dropdown">
+      <span class="user-dropdown-label"><%= current_user.username %> ▼</span>
+      <div class="user-dropdown-menu">
+        <%= link_to "Profile", user_path(current_user) %>
+        <%= link_to "Logout", logout_path, data: { turbo_method: :delete } %>
+      </div>
+    </div>
+  <% else %>
+    <%= link_to "Login", login_path %>
+  <% end %>
+</header>

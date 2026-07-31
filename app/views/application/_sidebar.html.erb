@@ -1,0 +1,81 @@
+<aside class="sidebar" data-controller="nav">
+  <div class="sidebar-header">
+    <div class="sidebar-brand"><%= link_to "RATF", root_path %></div>
+    <button class="sidebar-toggle" data-action="click->nav#toggle" aria-label="Menu">
+      <span data-nav-target="icon">☰</span>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav" data-nav-target="menu">
+    <%= link_to root_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">📊</span> <%= t("nav.dashboard") %>
+    <% end %>
+    <%= link_to favorites_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">⭐</span> Favorites
+    <% end %>
+    <%= link_to jobs_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">📋</span> <%= t("nav.jobs") %>
+    <% end %>
+    <%= link_to cloud_providers_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">☁️</span> Cloud
+    <% end %>
+    <%= link_to cloud_instances_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">🖥️</span> Instances
+    <% end %>
+    <% if admin? %>
+      <%= link_to users_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+        <span class="sidebar-icon">👥</span> Users
+      <% end %>
+    <% end %>
+    <%= link_to schedules_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">🕐</span> <%= t("nav.schedules") %>
+    <% end %>
+    <%= link_to api_tokens_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">🔑</span> <%= t("nav.api_tokens") %>
+    <% end %>
+
+    <div class="sidebar-divider"></div>
+
+    <%= link_to test_case_manager_index_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">⚙️</span> Case Manager
+    <% end %>
+    <%= link_to test_suites_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">📦</span> <%= t("nav.test_suites") %>
+    <% end %>
+    <%= link_to test_cases_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">🧪</span> <%= t("nav.test_cases") %>
+    <% end %>
+    <%= link_to issues_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">🐛</span> <%= t("nav.issues") %>
+    <% end %>
+
+    <div class="sidebar-divider"></div>
+
+    <%= link_to posts_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">📝</span> <%= t("nav.posts") %>
+    <% end %>
+    <%= link_to wiki_pages_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">📚</span> Wiki
+    <% end %>
+    <%= link_to logs_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">📜</span> <%= t("nav.logs") %>
+    <% end %>
+    <%= link_to search_index_path, class: "sidebar-link", data: { action: "click->nav#close" } do %>
+      <span class="sidebar-icon">🔍</span> <%= t("nav.search") %>
+    <% end %>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-controls">
+      <div class="theme-toggle" data-controller="theme">
+        <button data-theme-target="button" data-action="click->theme#set" data-theme="light" title="Light">☀️</button>
+        <button data-theme-target="button" data-action="click->theme#set" data-theme="dark" title="Dark">🌙</button>
+        <button data-theme-target="button" data-action="click->theme#set" data-theme="system" title="System">💻</button>
+      </div>
+      <div class="theme-toggle" data-controller="locale">
+        <button data-locale-target="button" data-action="click->locale#set" data-locale="en">EN</button>
+        <button data-locale-target="button" data-action="click->locale#set" data-locale="zh">中文</button>
+      </div>
+    </div>
+  </div>
+</aside>

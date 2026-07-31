@@ -1,0 +1,37 @@
+pending_job:
+  name: Smoke Test Run
+  description: Basic smoke test job
+  definition: { steps: ["login", "check-dashboard", "logout"], resources: { cpu: 2, memory: "512M" }, environment: "staging" }
+  status: 0
+  priority: 1
+  created_by: admin
+
+running_job:
+  name: Regression Suite
+  description: Full regression test suite
+  definition: { steps: ["init", "run-tests", "collect-results"], resources: { cpu: 4, memory: "1G" }, environment: "production" }
+  status: 2
+  priority: 2
+  created_by: manager
+  started_at: <%= 5.minutes.ago.iso8601 %>
+
+completed_job:
+  name: Unit Tests
+  description: Unit test execution
+  definition: { steps: ["setup", "test", "teardown"], resources: { cpu: 1, memory: "256M" }, environment: "staging" }
+  status: 3
+  priority: 1
+  created_by: user_one
+  started_at: <%= 1.hour.ago.iso8601 %>
+  completed_at: <%= 30.minutes.ago.iso8601 %>
+
+failed_job:
+  name: Integration Tests
+  description: Integration test execution
+  definition: { steps: ["prepare", "integrate", "verify"], resources: { cpu: 2, memory: "512M" }, environment: "staging" }
+  status: 4
+  priority: 3
+  created_by: user_two
+  started_at: <%= 2.hours.ago.iso8601 %>
+  completed_at: <%= 1.hour.ago.iso8601 %>
+

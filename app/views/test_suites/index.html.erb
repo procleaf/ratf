@@ -1,0 +1,26 @@
+<h1><%= t("models.test_suites") %></h1>
+
+<%= link_to t("common.new"), new_test_suite_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th><%= t("common.name") %></th>
+      <th><%= t("attributes.version") %></th>
+      <th><%= t("common.status") %></th>
+      <th><%= t("attributes.project") %></th>
+      <th><%= t("dashboard.runs") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records.each do |record| %>
+      <tr>
+        <td><%= link_to record.name, test_suite_path(record) %></td>
+        <td><%= record.version || "—" %></td>
+        <td><span class="badge badge-<%= record.status %>"><%= t("statuses.#{record.status}") %></span></td>
+        <td><%= record.project&.name || "—" %></td>
+        <td><%= record.test_cases.count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

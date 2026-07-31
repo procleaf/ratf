@@ -1,0 +1,11 @@
+admin_fav_login:
+  user: admin
+  test_case: login_test
+
+admin_fav_dashboard:
+  user: admin
+  test_case: dashboard_test
+
+manager_fav_api:
+  user: manager
+  test_case: api_test

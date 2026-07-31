@@ -1,0 +1,9 @@
+admin_comment:
+  content: This log shows an interesting pattern.
+  log: run_log
+  user: admin
+
+manager_comment:
+  content: Let's investigate the warning on line 4.
+  log: run_log
+  user: manager

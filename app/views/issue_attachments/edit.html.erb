@@ -1,0 +1,6 @@
+<h1>Edit Attachment</h1>
+
+<%= render "form", issue: @issue, issue_attachment: @record %>
+
+<%= link_to "Show", issue_issue_attachment_path(@issue, @record) %> |
+<%= link_to "Back", issue_issue_attachments_path(@issue) %>

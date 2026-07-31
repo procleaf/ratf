@@ -1,0 +1,22 @@
+info_entry:
+  job_run: completed_run
+  log_level: 1
+  message: Test suite execution started
+  source: ratf-runner
+  timestamp: <%= 30.minutes.ago.iso8601 %>
+
+warn_entry:
+  job_run: completed_run
+  log_level: 2
+  message: Deprecated method `old_api` called
+  source: ratf-runner
+  timestamp: <%= 29.minutes.ago.iso8601 %>
+
+error_entry:
+  job_run: failed_run
+  test_case: dashboard_test
+  log_level: 3
+  message: Widget timeout exceeded after 30 seconds
+  source: test-executor
+  metadata: { widget: "revenue", timeout: 30 }
+  timestamp: <%= 1.hour.ago.iso8601 %>

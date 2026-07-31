@@ -1,0 +1,62 @@
+<h1><%= @record.name %></h1>
+
+<dl>
+  <dt>ID</dt>
+  <dd><%= @record.id %></dd>
+
+  <dt>Name</dt>
+  <dd><%= @record.name %></dd>
+
+  <dt>Status</dt>
+  <dd><%= @record.status %></dd>
+
+  <dt>Test Case</dt>
+  <dd><%= @record.test_case&.name || "None" %></dd>
+
+  <dt>Test Suite</dt>
+  <dd><%= @record.test_suite&.name || "None" %></dd>
+
+  <dt>Job Run</dt>
+  <dd><%= @record.job_run_id || "None" %></dd>
+
+  <dt>Execution Time</dt>
+  <dd><%= @record.execution_time %></dd>
+
+  <dt>Message</dt>
+  <dd><%= @record.message %></dd>
+
+  <dt>Browser</dt>
+  <dd><%= @record.metadata["browser"] %></dd>
+
+  <dt>Environment</dt>
+  <dd><%= @record.metadata["environment"] %></dd>
+
+  <dt>OS</dt>
+  <dd><%= @record.metadata["os"] %></dd>
+
+  <dt>Version</dt>
+  <dd><%= @record.metadata["version"] %></dd>
+
+  <dt>Tags</dt>
+  <dd><%= @record.metadata["tags"] %></dd>
+
+  <dt>Custom Data</dt>
+  <dd><%= @record.metadata["custom_data"] %></dd>
+
+  <dt>Started At</dt>
+  <dd><%= @record.started_at %></dd>
+
+  <dt>Ended At</dt>
+  <dd><%= @record.ended_at %></dd>
+
+  <dt>Created At</dt>
+  <dd><%= @record.created_at %></dd>
+
+  <dt>Updated At</dt>
+  <dd><%= @record.updated_at %></dd>
+</dl>
+
+<p>
+  
+  <%= link_to "Back to Test Results", test_results_path %>
+</p>
