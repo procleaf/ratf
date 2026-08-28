@@ -1240,3 +1240,8 @@ pre {
   white-space: nowrap;
 }
 .user-dropdown-menu a:hover { background: var(--color-bg); }
+
+/* ── Footer (Beian) ── */
+.app-footer { text-align: center; padding: 16px; border-top: 1px solid var(--color-border); margin-top: 24px; }
+.app-footer a { color: var(--color-muted); font-size: 13px; text-decoration: none; }
+.app-footer a:hover { color: var(--color-primary); }
