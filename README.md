@@ -1,3 +1,7 @@
+
+Demo: http://proctest.com:3000
+Login: alice@ratf.local/password123
+
 # RATF — Ruby Automation Test Framework
 
 A full-featured web application for managing, executing, and analyzing automated tests. Built with **Ruby on Rails 8.1** and **SQLite3**.
