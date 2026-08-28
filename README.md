@@ -9,7 +9,6 @@ RATF provides a complete platform for test automation teams:
 - **Test Case Management** — Create, edit, import/export, and clone test suites and test cases
 - **Live Test Execution** — Run shell commands, Selenium browser tests, Appium mobile tests, and natural-language tests
 - **Job Scheduling** — Cron-based scheduling with queue management
-- **Worker Management** — Register and monitor distributed test workers
 - **Issue Tracker** — Full bug tracking with status workflow, comments, and emoji reactions
 - **Knowledge Base** — Team wiki for documentation
 - **Role-Based Access Control** — Admin, manager, and user roles
@@ -39,7 +38,7 @@ RATF provides a complete platform for test automation teams:
 
 ```bash
 # Clone and setup
-cd ratf/webui
+cd ratf.github
 bundle install
 bin/rails db:setup
 
@@ -53,12 +52,12 @@ bin/rails server
 open http://localhost:3000
 ```
 
-Default login after seeding: `admin@ratf.local` / `password123`
+Default login: `admin@ratf.local` (password generated at setup)
 
 ## Project Structure
 
 ```
-ratf/webui/
+ratf.github/
 ├── app/
 │   ├── controllers/       # 41 controllers (REST, API, nested)
 │   ├── models/            # 34 models with validations, scopes, callbacks
@@ -98,8 +97,8 @@ ratf/webui/
 - **Live output** — Logs saved and viewable in terminal-style viewer with line numbers
 
 ### Dashboard
-- **Stats summary** — Total jobs, running, queued, workers, success rate, avg duration
-- **Distribution cards** — Test results, job status, worker status with colored badges
+- **Stats summary** — Total jobs, running, queued, success rate, avg duration
+- **Distribution cards** — Test results, job status with colored badges
 - **Recent activity** — Last 8 job runs with status and duration
 - **Flaky test detection** — Tests with ≥5 runs and <90% pass rate
 - **Slowest tests** — Top 10 slowest test runs
@@ -108,7 +107,6 @@ ratf/webui/
 - **Job management** — Create, queue, run, monitor jobs
 - **Job runs** — Track execution history with timing
 - **Cron scheduling** — Schedule recurring jobs with cron expressions
-- **Agents** — Distributed test execution workers
 - **Artifacts** — Upload and manage job output files
 
 ### Issues (Bug Tracker)
@@ -139,7 +137,6 @@ ratf/webui/
 GET  /api/v1/health              # Public health check
 GET  /api/v1/jobs                # List jobs (auth required)
 POST /api/v1/jobs                # Create job
-GET  /api/v1/workers             # List workers
 GET  /api/v1/results             # List test results
 ```
 
@@ -149,7 +146,6 @@ GET  /api/v1/results             # List test results
 bin/ratf dashboard                # Dashboard summary
 bin/ratf jobs                     # List jobs
 bin/ratf jobs:show 1              # Job detail
-bin/ratf workers                  # Worker status
 bin/ratf suites                   # Test suites
 bin/ratf results:failed           # Recent failures
 bin/ratf health                   # System health check
@@ -187,7 +183,7 @@ bin/rails test test/controllers
 
 | Count | Categories |
 |---|---|
-| 34 models | User, Job, Worker, TestSuite, TestCase, TestResult, Issue, Schedule, ApiToken, CloudProvider, CloudInstance, WikiPage, Favorite, AuditLog, Notification, CommentReaction, LogComment, and more |
+| 34 models | User, Job, TestSuite, TestCase, TestResult, Issue, Schedule, ApiToken, CloudProvider, CloudInstance, WikiPage, Favorite, AuditLog, Notification, CommentReaction, LogComment, and more |
 
 ## Internationalization
 
